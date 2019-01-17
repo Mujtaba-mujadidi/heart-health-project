@@ -1,0 +1,74 @@
+<!--
+  Generated template for the DoctorMainPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>doctorMain</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <ion-segment [(ngModel)]="doctorMainPageSegment">
+    <ion-segment-button value="patients">
+      Patients
+    </ion-segment-button>
+    <ion-segment-button value="potentialPatients">
+      Potential Patients
+    </ion-segment-button>
+  </ion-segment>
+
+  <div [ngSwitch]="doctorMainPageSegment">
+    <div *ngSwitchCase="'potentialPatients'">
+      <h1 *ngIf="listOfPotentialPatients.length === 0">No Potential Facilitators</h1>
+      <ion-card *ngFor="let patient of listOfPotentialPatients">
+        <ion-card-header>{{patient.payload.val().name}}</ion-card-header>
+        <ion-card-content>
+          <ion-item>
+            <ion-label item-start>Date Of Birth</ion-label>
+            <p item-end>{{patient.payload.val().dateOfBirth}}</p>
+          </ion-item>
+          <ion-item>
+            <ion-label item-start>Email</ion-label>
+            <p item-end>{{patient.payload.val().email}}</p>
+          </ion-item>
+          <ion-item>
+            <ion-label item-start>Address</ion-label>
+            <p item-end>{{patient.payload.val().address}}</p>
+          </ion-item>
+          <ion-item>
+            <button ion-button clear (click)="approveRegistration(patient.payload)" item-start>Accept</button>
+            <button ion-button clear color="danger" (click)="rejectRegistration(patient.payload)" item-end>Reject</button>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
+    </div>
+    <div *ngSwitchCase="'patients'">
+      <ion-card *ngFor="let patient of listOfPatients">
+        <ion-card-header>{{patient.payload.val().name}}</ion-card-header>
+        <ion-card-content>
+          <ion-item>
+            <ion-label item-start>Date Of Birth</ion-label>
+            <p item-end>{{patient.payload.val().dateOfBirth}}</p>
+          </ion-item>
+          <ion-item>
+            <ion-label item-start>Email</ion-label>
+            <p item-end>{{patient.payload.val().email}}</p>
+          </ion-item>
+
+           <ion-item>
+            <button ion-button full (click)="viewPatient(patient.payload)">View</button>
+          </ion-item>
+
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+  </div>
+
+</ion-content>

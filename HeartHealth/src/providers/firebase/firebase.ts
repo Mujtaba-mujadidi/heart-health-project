@@ -1,0 +1,125 @@
+import { Injectable } from '@angular/core';
+import { AngularFireDatabase } from "angularfire2/database";
+import { AngularFireStorage } from "angularfire2/storage";
+import * as firebase from "firebase";
+import { Observable } from 'rxjs';
+
+/*
+  Generated class for the FirebaseProvider provider.
+
+  See https://angular.io/guide/dependency-injection for more info on providers
+  and Angular DI.
+*/
+@Injectable()
+export class FirebaseProvider {
+
+  public firebaseAuthor: any; /*Author of the firebase*/
+
+
+  constructor(
+    public firebaseDatabase: AngularFireDatabase,
+    private firebaseStorage: AngularFireStorage,
+
+  ) {
+    console.log('Hello FirebaseProvider Provider');
+    this.firebaseAuthor = firebase.auth();
+  }
+
+  /**
+   * @description To replace/update object into nodeReference with the given id (optional).
+   * @param nodeReference: node reference to which object is inserted.
+   * @param object: object to be inserted into nodeReference. 
+   * @param id: unique key of the object in nodeReference, when undefined, it is set to UID of logged in user. 
+   */
+  public async setObjectToFirebaseListWithTheGivenID(nodeRef, object, id?) {
+    const objectId = (id) ? id : this.firebaseAuthor.currentUser.uid;
+    return new Promise((res, rej) => {
+      firebase.database().ref().child(nodeRef).child(objectId).set(object).then(() => {
+        res();
+      }).catch((error) => {
+        rej(error);
+      })
+    })
+  }
+
+  /**
+    * @description To insert object into nodeReference with the given id (optional).
+    * @param nodeReference: node reference to which object is inserted.
+    * @param object: object to be inserted into nodeReference. 
+    * @param id: unique key of the object in nodeReference, when undefined, it is set to UID of logged in user. 
+    */
+  public async addObjectToFirebaseListWithTheGivenID(nodeRef, object, id?) {
+    console.log(nodeRef)
+    const objectId = (id) ? id : this.firebaseAuthor.currentUser.uid;
+    return firebase.database().ref().child(nodeRef).child(objectId).push(object);
+  }
+
+  /**
+   * @description To retrieve an observable list for the given node reference.
+   * @param nodeReference Name of the node in firebase.
+   * @return Observable list retrieved from the node in firebase.
+   */
+  public getObservables(nodeReference): Observable<any> {
+    return this.firebaseDatabase.list(nodeReference).snapshotChanges();
+  }
+
+  /**
+  * @description To retrieve an observable list for the given node reference which matches the value.
+  * @param nodeReference Name of the node in firebase.
+  * @return Observable list retrieved from the node in firebase.
+  */
+  public getObservablesByMatch(nodeReference, orderByChildValue, value?): Observable<any> {
+    value = (value) ? value : this.firebaseAuthor.currentUser.uid
+    return this.firebaseDatabase.list(nodeReference, ref => ref.orderByChild(orderByChildValue).equalTo(value)).snapshotChanges();
+
+  }
+
+
+
+  /**
+   * @description To retrieve an object from nodeReference with the matching id (optional)
+   * @param nodeReference: node reference from which object is retrieved. 
+   * @param id: unique key of the object in nodeReference, when undefined, it is set to UID of logged in user. 
+   */
+  public getObjectFromNodeReferenceWithTheMatchingId(nodeReference, id?): Promise<any> {
+    const objectId = (id) ? id : this.firebaseAuthor.currentUser.uid;
+    return new Promise((resolve, reject) => {
+      firebase.database().ref('/' + nodeReference).child(objectId).once('value', (snapshot) => {
+        if (snapshot.val()) {
+          resolve(snapshot.val())
+        } else {
+          reject();
+        }
+      }).catch((err) => {
+        reject(err);
+      })
+    })
+  }
+
+  public getCurrentUserUid(){
+    return this.firebaseAuthor.currentUser.uid;
+  }
+
+  /**
+   * @description To remove object with the matching key from the nodeReference
+   * @param nodeReference: reference to a firebase node. 
+   * @param objectKey: key of the object to be removed from the nodeReference. 
+   */
+  public removeObjectFromGivenNodeReference(nodeReference, objectKey) {
+    return this.firebaseDatabase.list(nodeReference).remove(objectKey)
+  }
+
+
+  /**
+   * @description: Creates an account in firebase authentication with the supplied email, and password. 
+   */
+  public signUp(email, password): Promise<any> {
+    return this.firebaseAuthor.createUserWithEmailAndPassword(email, password);
+  }
+
+
+  public signIn(email, password): Promise<any> {
+    return this.firebaseAuthor.signInWithEmailAndPassword(email, password)
+  }
+
+}

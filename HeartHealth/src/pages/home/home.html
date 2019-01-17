@@ -5,13 +5,84 @@
 </ion-header>
 
 <ion-content padding>
-  <h2>Welcome to Ionic!</h2>
-  <p>
-    This starter project comes with simple tabs-based layout for apps
-    that are going to primarily use a Tabbed UI.
-  </p>
-  <p>
-    Take a look at the <code>src/pages/</code> directory to add or change tabs,
-    update any existing page or create new pages.
-  </p>
+  <br>
+  <form [formGroup]="form">
+    <ion-item>
+      <ion-label text-wrap>Systolic BP (mm Hg):</ion-label>
+      <ion-input autocorrect=“on” autocomplete="on" type="number" formControlName="systolicBloodPressure"></ion-input>
+    </ion-item>
+
+    <ion-item *ngIf="!form.controls.systolicBloodPressure.valid  && (form.controls.systolicBloodPressure.dirty)">
+      <p class="invalid_input">Please enter your Systolic Blood Pressure.</p>
+    </ion-item>
+
+    <ion-item>
+      <ion-label text-wrap>Diastolic BP (mm Hg):</ion-label>
+      <ion-input autocorrect=“on” autocomplete="on" type="number" formControlName="diastolicBloodPressure"></ion-input>
+    </ion-item>
+
+    <ion-item *ngIf="!form.controls.diastolicBloodPressure.valid  && (form.controls.diastolicBloodPressure.dirty)">
+      <p class="invalid_input">Please enter your Diastolic Blood Pressure.</p>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Heart Rate (BPM): {{form.value.hearRate}}</ion-label>
+      <ion-range min="0" max="150" formControlName="hearRate" pin="true" color="secondary">
+        <ion-label range-left>0</ion-label>
+        <ion-label range-right>150</ion-label>
+      </ion-range>
+    </ion-item>
+
+    <ion-item *ngIf="!form.controls.hearRate.valid  && (form.controls.hearRate.dirty)">
+      <p class="invalid_input">Please enter your Heart Rate.</p>
+    </ion-item>
+
+    <ion-item>
+      <ion-label text-wrap>Glucose Level (mmol/L):</ion-label>
+      <ion-input autocorrect=“on” autocomplete="on" type="number" formControlName="glucose"></ion-input>
+    </ion-item>
+
+    <ion-item *ngIf="!form.controls.glucose.valid  && (form.controls.glucose.dirty)">
+      <p class="invalid_input">Please enter your Glucose Level.</p>
+    </ion-item>
+
+    <ion-item>
+      <ion-label text-wrap>Weight (Kg):</ion-label>
+      <ion-input autocorrect=“on” autocomplete="on" type="number" formControlName="weight"></ion-input>
+    </ion-item>
+
+    <ion-item *ngIf="!form.controls.weight.valid  && (form.controls.weight.dirty)">
+      <p class="invalid_input">Please enter your Weight.</p>
+    </ion-item>
+
+    <ion-item>
+      <ion-label text-wrap>Fitness (min):</ion-label>
+      <ion-label text-wrap item-end>{{form.value.fitnessLength}} mins</ion-label>
+    </ion-item>
+
+    <ion-list radio-group formControlName="fitnessLength" no-lines>
+      <ion-item>
+        <ion-label>30 mins</ion-label>
+        <ion-radio value="30"></ion-radio>
+      </ion-item>
+      <ion-item>
+        <ion-label>45 mins</ion-label>
+        <ion-radio value="45"></ion-radio>
+      </ion-item>
+      <ion-item>
+        <ion-label>60 mins</ion-label>
+        <ion-radio value="60"></ion-radio>
+      </ion-item>
+    </ion-list>
+
+    <ion-item *ngIf="!form.controls.weight.valid  && (form.controls.weight.dirty)">
+      <p class="invalid_input">Please enter your Weight.</p>
+    </ion-item>
+
+  </form>
+
+  <button ion-button full id="signUp-btn" (click)="submitForm()">Submit Form</button>
+
+
+
 </ion-content>

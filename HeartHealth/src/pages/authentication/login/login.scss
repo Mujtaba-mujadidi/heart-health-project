@@ -13,20 +13,17 @@ page-login {
             margin-top: 20%;
             height: 20%;
             #input-field {
-                border: solid thin #ff8082;
-                border-radius: 20px;
+                border: thin solid lightgrey;
+                border-radius: 17px;
                 margin-top: 2%;
             }
         }
         .login-action {
             margin-top: 20%;
             height: 20%;
-
-            #login-btn {
-            }
-
+            #login-btn {}
             #signUp-btn {
-                background: #ff8082;
+                background: #FF7E79;
                 margin-top: 5%;
             }
         }
