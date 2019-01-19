@@ -14,6 +14,7 @@ import { Observable } from 'rxjs';
 export class FirebaseProvider {
 
   public firebaseAuthor: any; /*Author of the firebase*/
+  public loggedInUserUID = ""
 
 
   constructor(
@@ -97,7 +98,7 @@ export class FirebaseProvider {
   }
 
   public getCurrentUserUid(){
-    return this.firebaseAuthor.currentUser.uid;
+    return this.loggedInUserUID
   }
 
   /**
@@ -119,7 +120,14 @@ export class FirebaseProvider {
 
 
   public signIn(email, password): Promise<any> {
-    return this.firebaseAuthor.signInWithEmailAndPassword(email, password)
+    return new Promise((resolve, reject)=>{
+      this.firebaseAuthor.signInWithEmailAndPassword(email, password).then(()=>{
+        this.loggedInUserUID = this.firebaseAuthor.currentUser.uid;
+        resolve()
+      }).catch(error => reject(error))
+
+    })
+    
   }
 
 }
