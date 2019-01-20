@@ -83,9 +83,9 @@ export class FirebaseProvider {
    * @param id: unique key of the object in nodeReference, when undefined, it is set to UID of logged in user. 
    */
   public getObjectFromNodeReferenceWithTheMatchingId(nodeReference, id?): Promise<any> {
-    const objectId = (id) ? id : this.firebaseAuthor.currentUser.uid;
+    const childId = (id) ? id : this.firebaseAuthor.currentUser.uid;
     return new Promise((resolve, reject) => {
-      firebase.database().ref('/' + nodeReference).child(objectId).once('value', (snapshot) => {
+      firebase.database().ref('/' + nodeReference).child(childId).once('value', (snapshot) => {
         if (snapshot.val()) {
           resolve(snapshot.val())
         } else {
@@ -97,7 +97,20 @@ export class FirebaseProvider {
     })
   }
 
-  public getCurrentUserUid(){
+  getPatientsRecentProfile(id?): Promise<any> {
+    const childId = (id) ? id : this.loggedInUserUID
+    return new Promise((resolve, reject) => {
+      firebase.database().ref("patientsHealth").child(childId).limitToLast(5).once('value', snapshot => {
+        if (snapshot.val()) {
+          resolve(snapshot.val())
+        } else {
+          reject("No data for this patient")
+        }
+      }).catch(error => reject(error))
+    })
+  }
+
+  public getCurrentUserUid() {
     return this.loggedInUserUID
   }
 
@@ -120,14 +133,14 @@ export class FirebaseProvider {
 
 
   public signIn(email, password): Promise<any> {
-    return new Promise((resolve, reject)=>{
-      this.firebaseAuthor.signInWithEmailAndPassword(email, password).then(()=>{
+    return new Promise((resolve, reject) => {
+      this.firebaseAuthor.signInWithEmailAndPassword(email, password).then(() => {
         this.loggedInUserUID = this.firebaseAuthor.currentUser.uid;
         resolve()
       }).catch(error => reject(error))
 
     })
-    
+
   }
 
 }

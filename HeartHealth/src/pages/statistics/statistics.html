@@ -7,12 +7,22 @@
 <ion-header>
   <ion-navbar color="danger">
     <ion-title>
-      Charts in Ionic 2
+      Statistics
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
+
+  <ion-item>
+    <ion-label>Please select: </ion-label>
+    <ion-select [(ngModel)]="factor" (ionChange)="updateChart()"  interface="popover">
+      <ion-option value="bp">Blood Pressure</ion-option>
+      <ion-option value="hr">Heart Rate</ion-option>
+      <ion-option value="fitness">Fitness</ion-option>
+      <ion-option value="weight">Weight</ion-option>
+    </ion-select>
+  </ion-item>
 
   <ion-card>
     <ion-card-header>
@@ -23,23 +33,6 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-card>
-    <ion-card-header>
-      Doughnut Chart
-    </ion-card-header>
-    <ion-card-content>
-      <canvas #doughnutCanvas></canvas>
-    </ion-card-content>
-  </ion-card>
-
-  <ion-card>
-    <ion-card-header>
-      Line Chart
-    </ion-card-header>
-    <ion-card-content>
-      <canvas #lineCanvas></canvas>
-    </ion-card-content>
-  </ion-card>
 
 </ion-content>
 

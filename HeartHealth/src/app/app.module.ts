@@ -23,6 +23,7 @@ import { FirebaseProvider } from '../providers/firebase/firebase';
 import { AuthenticationProvider } from "../providers/authentication/authentication";
 import { DoctorMainPage } from "../pages/doctor-main/doctor-main";
 import { StatisticsPage } from "../pages/statistics/statistics";
+import { StatisticsProvider } from '../providers/statistics/statistics';
 
 
 
@@ -65,7 +66,8 @@ import { StatisticsPage } from "../pages/statistics/statistics";
     Firebase,
     AngularFireAuth,
     FirebaseProvider,
-    AuthenticationProvider
+    AuthenticationProvider,
+    StatisticsProvider
   ]
 })
 export class AppModule {}

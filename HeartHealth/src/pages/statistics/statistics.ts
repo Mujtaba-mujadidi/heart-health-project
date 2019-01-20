@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Chart } from 'chart.js';
 import { FirebaseProvider } from "../../providers/firebase/firebase";
+import { StatisticsProvider } from "../../providers/statistics/statistics";
 
 
 /**
@@ -18,64 +19,43 @@ import { FirebaseProvider } from "../../providers/firebase/firebase";
 })
 export class StatisticsPage {
 
+  factor = ""
+
   @ViewChild('barCanvas') barCanvas;
+  chartTitle = ""
+  recentProfileChartLabel = []
+  overallProfileChartLabel = []
+  recentProfileData = []
+  overallProfileData = []
+
+
   barChart: any;
-  healthProfile: any
-  labels = ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"]
-  label = "# of Votes"
-  data = [12, 19, 3, 5, 2, 3]
-
-  labels2 = []
-  data2 = []
-
-   lineChart: any;
-  @ViewChild('lineCanvas') lineCanvas;
-
-
+  
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public firebaseProvider: FirebaseProvider
+    public firebaseProvider: FirebaseProvider,
+    public statisticsProvider: StatisticsProvider
   ) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad StatisticsPage');
-    this.retrieveStats()
-    setTimeout( () => {
-       this.initChart()
-       this.initLineChart()
-    }, 1000);
-
-    
-
-  }
-
-  retrieveStats() {
-    this.firebaseProvider.getObjectFromNodeReferenceWithTheMatchingId("patientsHealth").then(data => {
-      console.log(data)
-      Object.keys(data).forEach(key => {
-        this.labels2.push(key)
-        this.data2.push(data[key].systolicBloodPressure)
-        console.log(key)
-        console.log(data[key].systolicBloodPressure)
-        //use key and value here
-      });
+    this.statisticsProvider.getPatientsProfile().then(() => {
+      this.recentProfileChartLabel = this.statisticsProvider.getChartLabelForPatientsRecentProfile();
+      this.overallProfileChartLabel = this.statisticsProvider.getChartLabelForPatientsOverallProfile()
     })
-
   }
 
-
-  initChart() {
+  initChart(data, labels, title) {
     this.barChart = new Chart(this.barCanvas.nativeElement, {
-
       type: 'bar',
       data: {
-        labels: this.labels2,
+        labels: labels,
         datasets: [{
-          label: this.label,
-          data: this.data2,
+          label: title,
+          data: data,
           backgroundColor: [
             'rgba(255, 99, 132, 0.2)',
             'rgba(54, 162, 235, 0.2)',
@@ -108,40 +88,28 @@ export class StatisticsPage {
     });
   }
 
-  initLineChart(){
-      this.lineChart = new Chart(this.lineCanvas.nativeElement, {
+  updateChart() {
+    switch (this.factor) {
+      case "bp": {
+        this.initChart(this.statisticsProvider.recentSystolicBpData, this.recentProfileChartLabel ,"Blood Pressure (mm Hg)")
+        break;
+      }
 
-            type: 'line',
-            data: {
-                labels: this.labels2,//["January", "February", "March", "April", "May", "June", "July"],
-                datasets: [
-                    {
-                        label: "My First dataset",
-                        fill: false,
-                        lineTension: 0.1,
-                        backgroundColor: "rgba(75,192,192,0.4)",
-                        borderColor: "rgba(75,192,192,1)",
-                        borderCapStyle: 'butt',
-                        borderDash: [],
-                        borderDashOffset: 0.0,
-                        borderJoinStyle: 'miter',
-                        pointBorderColor: "rgba(75,192,192,1)",
-                        pointBackgroundColor: "#fff",
-                        pointBorderWidth: 1,
-                        pointHoverRadius: 5,
-                        pointHoverBackgroundColor: "rgba(75,192,192,1)",
-                        pointHoverBorderColor: "rgba(220,220,220,1)",
-                        pointHoverBorderWidth: 2,
-                        pointRadius: 1,
-                        pointHitRadius: 10,
-                        data: this.data2,//[65, 59, 80, 81, 56, 55, 40],
-                        spanGaps: false,
-                    }
-                ]
-            }
+      case "hr": {
+        this.initChart(this.statisticsProvider.recentHrData, this.recentProfileChartLabel ,"Heart Rate (BPM)")
+        break;
+      }
 
-        });
+      case "fitness": {
+        this.initChart(this.statisticsProvider.recentFitnessData, this.recentProfileChartLabel ,"Fitness level")
+        break;
+      }
 
+      case "weight": {
+        this.initChart(this.statisticsProvider.recentWeightData, this.recentProfileChartLabel ,"Weight (Kgs)")
+        break;
+      }
+    }
   }
 
 }
