@@ -3,6 +3,7 @@ import { NavController } from 'ionic-angular';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { FirebaseProvider } from "../../providers/firebase/firebase";
 import { AuthenticationProvider } from "../../providers/authentication/authentication";
+import { User } from "../../models/user.model";
 
 
 @Component({
@@ -11,7 +12,9 @@ import { AuthenticationProvider } from "../../providers/authentication/authentic
 })
 export class HomePage {
 
-  public form: FormGroup;
+  private form: FormGroup;
+  private patientDetails: User = {} as any
+
 
   constructor(
     public navCtrl: NavController,
@@ -22,6 +25,12 @@ export class HomePage {
   ) {
     this.buildForm();
   }
+
+   ionViewDidLoad(){
+     this.firebaseProvider.getObjectFromNodeReferenceWithTheMatchingId("patients").then((details)=>{
+       this.patientDetails = details
+     })
+   }
 
   buildForm() {
     this.form = this.formBuilder.group({
@@ -40,6 +49,10 @@ export class HomePage {
     const date = new Date().toLocaleDateString("en-gb", options)
     const userUid = this.firebaseProvider.getCurrentUserUid();
     this.firebaseProvider.setObjectToFirebaseListWithTheGivenID("patientsHealth/"+userUid, this.form.value, date);
+  }
+
+  analyzeData(){
+
   }
 
 }

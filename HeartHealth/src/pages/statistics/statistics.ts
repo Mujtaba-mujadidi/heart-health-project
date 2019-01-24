@@ -4,7 +4,6 @@ import { Chart } from 'chart.js';
 import { FirebaseProvider } from "../../providers/firebase/firebase";
 import { StatisticsProvider } from "../../providers/statistics/statistics";
 
-
 /**
  * Generated class for the StatisticsPage page.
  *
@@ -20,6 +19,8 @@ import { StatisticsProvider } from "../../providers/statistics/statistics";
 export class StatisticsPage {
 
   factor = ""
+  recentAnalysis
+   = []
 
   @ViewChild('barCanvas') barCanvas;
   chartTitle = ""
@@ -88,24 +89,32 @@ export class StatisticsPage {
     });
   }
 
+  
+
   updateChart() {
+    // if(this.barCanvas) this.barCanvas.destroy()
+    this.recentAnalysis = []
     switch (this.factor) {
-      case "bp": {
+      case "Blood Pressure": {
         this.initChart(this.statisticsProvider.recentSystolicBpData, this.recentProfileChartLabel ,"Blood Pressure (mm Hg)")
+        this.recentAnalysis
+         = this.statisticsProvider.getAnalyses(this.factor)
         break;
       }
 
-      case "hr": {
+      case "Heart Rate": {
         this.initChart(this.statisticsProvider.recentHrData, this.recentProfileChartLabel ,"Heart Rate (BPM)")
+        this.recentAnalysis
+         = this.statisticsProvider.getAnalyses(this.factor)
         break;
       }
 
-      case "fitness": {
+      case "Fitness": {
         this.initChart(this.statisticsProvider.recentFitnessData, this.recentProfileChartLabel ,"Fitness level")
         break;
       }
 
-      case "weight": {
+      case "Weight": {
         this.initChart(this.statisticsProvider.recentWeightData, this.recentProfileChartLabel ,"Weight (Kgs)")
         break;
       }

@@ -17,10 +17,10 @@
   <ion-item>
     <ion-label>Please select: </ion-label>
     <ion-select [(ngModel)]="factor" (ionChange)="updateChart()"  interface="popover">
-      <ion-option value="bp">Blood Pressure</ion-option>
-      <ion-option value="hr">Heart Rate</ion-option>
-      <ion-option value="fitness">Fitness</ion-option>
-      <ion-option value="weight">Weight</ion-option>
+      <ion-option value="Blood Pressure">Blood Pressure</ion-option>
+      <ion-option value="Heart Rate">Heart Rate</ion-option>
+      <ion-option value="Fitness">Fitness</ion-option>
+      <ion-option value="Weight">Weight</ion-option>
     </ion-select>
   </ion-item>
 
@@ -31,6 +31,25 @@
     <ion-card-content>
       <canvas #barCanvas></canvas>
     </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      Analysis
+    </ion-card-header>
+    <ion-card-content>
+     <ion-list *ngFor="let str of recentAnalysis">
+      <ion-item no-lines>
+        <p text-wrap>{{str}}</p>
+      </ion-item>
+     </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      Suggestions
+    </ion-card-header>
   </ion-card>
 
 
