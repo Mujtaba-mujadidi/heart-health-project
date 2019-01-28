@@ -5,83 +5,98 @@
 </ion-header>
 
 <ion-content padding>
-  <br>
-  <form [formGroup]="form">
-    <ion-item>
-      <ion-label text-wrap>Systolic BP (mm Hg):</ion-label>
-      <ion-input autocorrect=“on” autocomplete="on" type="number" formControlName="systolicBloodPressure"></ion-input>
-    </ion-item>
-
-    <ion-item *ngIf="!form.controls.systolicBloodPressure.valid  && (form.controls.systolicBloodPressure.dirty)">
-      <p class="invalid_input">Please enter your Systolic Blood Pressure.</p>
-    </ion-item>
-
-    <ion-item>
-      <ion-label text-wrap>Diastolic BP (mm Hg):</ion-label>
-      <ion-input autocorrect=“on” autocomplete="on" type="number" formControlName="diastolicBloodPressure"></ion-input>
-    </ion-item>
-
-    <ion-item *ngIf="!form.controls.diastolicBloodPressure.valid  && (form.controls.diastolicBloodPressure.dirty)">
-      <p class="invalid_input">Please enter your Diastolic Blood Pressure.</p>
-    </ion-item>
-
-    <ion-item>
-      <ion-label>Heart Rate (BPM): {{form.value.hearRate}}</ion-label>
-      <ion-range min="0" max="150" formControlName="hearRate" pin="true" color="secondary">
-        <ion-label range-left>0</ion-label>
-        <ion-label range-right>150</ion-label>
-      </ion-range>
-    </ion-item>
-
-    <ion-item *ngIf="!form.controls.hearRate.valid  && (form.controls.hearRate.dirty)">
-      <p class="invalid_input">Please enter your Heart Rate.</p>
-    </ion-item>
-
-    <ion-item>
-      <ion-label text-wrap>Glucose Level (mmol/L):</ion-label>
-      <ion-input autocorrect=“on” autocomplete="on" type="number" formControlName="glucose"></ion-input>
-    </ion-item>
-
-    <ion-item *ngIf="!form.controls.glucose.valid  && (form.controls.glucose.dirty)">
-      <p class="invalid_input">Please enter your Glucose Level.</p>
-    </ion-item>
-
-    <ion-item>
-      <ion-label text-wrap>Weight (Kg):</ion-label>
-      <ion-input autocorrect=“on” autocomplete="on" type="number" formControlName="weight"></ion-input>
-    </ion-item>
-
-    <ion-item *ngIf="!form.controls.weight.valid  && (form.controls.weight.dirty)">
-      <p class="invalid_input">Please enter your Weight.</p>
-    </ion-item>
-
-    <ion-item>
-      <ion-label text-wrap>Fitness (min):</ion-label>
-      <ion-label text-wrap item-end>{{form.value.fitnessLength}} mins</ion-label>
-    </ion-item>
-
-    <ion-list radio-group formControlName="fitnessLength" no-lines>
+  <ion-card class="patient_details">
+    <ion-card-header>
+      Patient details
+    </ion-card-header>
+    <ion-card-content>
       <ion-item>
-        <ion-label>30 mins</ion-label>
-        <ion-radio value="30"></ion-radio>
+        <ion-label text-wrap><b>Name:</b></ion-label>
+        <ion-label text-wrap item-end>{{patientDetails.name}}</ion-label>
       </ion-item>
       <ion-item>
-        <ion-label>45 mins</ion-label>
-        <ion-radio value="45"></ion-radio>
+        <ion-label text-wrap><b>Data Of Birth:</b></ion-label>
+        <ion-label text-wrap item-end>{{patientDetails.dateOfBirth}}</ion-label>
       </ion-item>
-      <ion-item>
-        <ion-label>60 mins</ion-label>
-        <ion-radio value="60"></ion-radio>
+       <ion-item>
+        <ion-label text-wrap><b>Email:</b></ion-label>
+        <ion-label text-wrap item-end>{{patientDetails.email}}</ion-label>
       </ion-item>
-    </ion-list>
+    </ion-card-content>
+  </ion-card>
+  
+  <ion-card>
+    <ion-card-header>Please fill all the fields</ion-card-header>
+    <ion-card-content>
+      <form [formGroup]="form">
+        <ion-item>
+          <ion-label text-wrap>Systolic BP (mm Hg):</ion-label>
+          <ion-input autocorrect=“on” autocomplete="on" type="number" formControlName="systolicBloodPressure"></ion-input>
+        </ion-item>
 
-    <ion-item *ngIf="!form.controls.weight.valid  && (form.controls.weight.dirty)">
-      <p class="invalid_input">Please enter your Weight.</p>
-    </ion-item>
+        <ion-item *ngIf="!form.controls.systolicBloodPressure.valid  && (form.controls.systolicBloodPressure.dirty)">
+          <p class="invalid_input">Please enter your Systolic Blood Pressure.</p>
+        </ion-item>
 
-  </form>
+        <ion-item>
+          <ion-label text-wrap>Diastolic BP (mm Hg):</ion-label>
+          <ion-input autocorrect=“on” autocomplete="on" type="number" formControlName="diastolicBloodPressure"></ion-input>
+        </ion-item>
 
-  <button ion-button full id="signUp-btn" (click)="submitForm()">Submit Form</button>
+        <ion-item *ngIf="!form.controls.diastolicBloodPressure.valid  && (form.controls.diastolicBloodPressure.dirty)">
+          <p class="invalid_input">Please enter your Diastolic Blood Pressure.</p>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Heart Rate (BPM): {{form.value.hearRate}}</ion-label>
+          <ion-range min="0" max="150" formControlName="hearRate" pin="true" color="secondary">
+            <ion-label range-left>0</ion-label>
+            <ion-label range-right>150</ion-label>
+          </ion-range>
+        </ion-item>
+
+        <ion-item *ngIf="!form.controls.hearRate.valid  && (form.controls.hearRate.dirty)">
+          <p class="invalid_input">Please enter your Heart Rate.</p>
+        </ion-item>
+
+        <ion-item>
+          <ion-label text-wrap>Glucose Level (mmol/L):</ion-label>
+          <ion-input autocorrect=“on” autocomplete="on" type="number" formControlName="glucose"></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="!form.controls.glucose.valid  && (form.controls.glucose.dirty)">
+          <p class="invalid_input">Please enter your Glucose Level.</p>
+        </ion-item>
+
+        <ion-item>
+          <ion-label text-wrap>Weight (Kg):</ion-label>
+          <ion-input autocorrect=“on” autocomplete="on" type="number" formControlName="weight"></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="!form.controls.weight.valid  && (form.controls.weight.dirty)">
+          <p class="invalid_input">Please enter your Weight.</p>
+        </ion-item>
+
+        <ion-list radio-group formControlName="fitnessLength" no-lines>
+          <ion-item>
+            <ion-label text-wrap>Fitness (min):</ion-label>
+            <ion-select formControlName="fitnessLength" interface="popover">
+              <ion-option value="30">30 mins</ion-option>
+              <ion-option value="45">45 mins</ion-option>
+              <ion-option value="60">60 mins</ion-option>
+            </ion-select>
+          </ion-item>
+        </ion-list>
+
+        <ion-item *ngIf="!form.controls.fitnessLength.valid  && (form.controls.fitnessLength.dirty)">
+          <p class="invalid_input">Please enter your Fitness.</p>
+        </ion-item>
+      </form>
+      <button ion-button full id="signUp-btn" (click)="submitForm()" [disabled]="!form.valid ">Submit Form</button>
+
+    </ion-card-content>
+  </ion-card>
+
 
 
 

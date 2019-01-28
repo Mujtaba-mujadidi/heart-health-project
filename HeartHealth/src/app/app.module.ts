@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 
-import { AboutPage } from '../pages/about/about';
 import { ContactPage } from '../pages/contact/contact';
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
@@ -23,6 +22,8 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { FirebaseProvider } from '../providers/firebase/firebase';
 import { AuthenticationProvider } from "../providers/authentication/authentication";
 import { DoctorMainPage } from "../pages/doctor-main/doctor-main";
+import { StatisticsPage } from "../pages/statistics/statistics";
+import { StatisticsProvider } from '../providers/statistics/statistics';
 
 
 
@@ -35,9 +36,9 @@ import { DoctorMainPage } from "../pages/doctor-main/doctor-main";
     LoginPage,
     SignUpPage,
     DoctorMainPage,
-    AboutPage,
     ContactPage,
     HomePage,
+    StatisticsPage,
     TabsPage
   ],
   imports: [
@@ -53,9 +54,9 @@ import { DoctorMainPage } from "../pages/doctor-main/doctor-main";
     LoginPage,
     SignUpPage,
     DoctorMainPage,
-    AboutPage,
     ContactPage,
     HomePage,
+    StatisticsPage,
     TabsPage
   ],
   providers: [
@@ -65,7 +66,8 @@ import { DoctorMainPage } from "../pages/doctor-main/doctor-main";
     Firebase,
     AngularFireAuth,
     FirebaseProvider,
-    AuthenticationProvider
+    AuthenticationProvider,
+    StatisticsProvider
   ]
 })
 export class AppModule {}
