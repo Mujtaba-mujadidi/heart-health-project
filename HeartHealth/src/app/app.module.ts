@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 
-import { ContactPage } from '../pages/contact/contact';
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 
@@ -24,8 +23,12 @@ import { AuthenticationProvider } from "../providers/authentication/authenticati
 import { DoctorMainPage } from "../pages/doctor-main/doctor-main";
 import { StatisticsPage } from "../pages/statistics/statistics";
 import { StatisticsProvider } from '../providers/statistics/statistics';
+import { PredictionPage } from "../pages/prediction/prediction";
+import { PredictionProvider } from "../providers/prediction/prediction";
 
 
+
+import { HttpClientModule} from '@angular/common/http';
 
 
 
@@ -36,7 +39,7 @@ import { StatisticsProvider } from '../providers/statistics/statistics';
     LoginPage,
     SignUpPage,
     DoctorMainPage,
-    ContactPage,
+    PredictionPage,
     HomePage,
     StatisticsPage,
     TabsPage
@@ -46,7 +49,9 @@ import { StatisticsProvider } from '../providers/statistics/statistics';
     IonicModule.forRoot(MyApp),
     AngularFireModule.initializeApp(FIREBASE_CONFIG),
     AngularFireDatabaseModule,
-    AngularFireStorageModule
+    AngularFireStorageModule,
+    HttpClientModule
+    
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -54,7 +59,7 @@ import { StatisticsProvider } from '../providers/statistics/statistics';
     LoginPage,
     SignUpPage,
     DoctorMainPage,
-    ContactPage,
+    PredictionPage,
     HomePage,
     StatisticsPage,
     TabsPage
@@ -67,7 +72,8 @@ import { StatisticsProvider } from '../providers/statistics/statistics';
     AngularFireAuth,
     FirebaseProvider,
     AuthenticationProvider,
-    StatisticsProvider
+    StatisticsProvider,
+    PredictionProvider
   ]
 })
 export class AppModule {}
