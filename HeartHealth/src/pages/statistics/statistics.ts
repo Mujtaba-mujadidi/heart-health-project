@@ -20,7 +20,7 @@ export class StatisticsPage {
 
   factor = ""
   recentAnalysis
-   = []
+  = []
 
   @ViewChild('barCanvas') barCanvas;
   chartTitle = ""
@@ -31,7 +31,6 @@ export class StatisticsPage {
 
 
   barChart: any;
-  
 
   constructor(
     public navCtrl: NavController,
@@ -47,6 +46,12 @@ export class StatisticsPage {
       this.recentProfileChartLabel = this.statisticsProvider.getChartLabelForPatientsRecentProfile();
       this.overallProfileChartLabel = this.statisticsProvider.getChartLabelForPatientsOverallProfile()
     })
+    // const g = this.barCanvas.nativeElement as HTMLInputElement
+
+    // g.onchange= ()=>{
+    //   console.log("Element is changing")
+    // }
+
   }
 
   initChart(data, labels, title) {
@@ -89,33 +94,33 @@ export class StatisticsPage {
     });
   }
 
-  
+
 
   updateChart() {
-    // if(this.barCanvas) this.barCanvas.destroy()
+     if (this.barChart !== undefined) {this.barChart.chart.destroy();} //To avoid placing the chart on top of the previous chart
     this.recentAnalysis = []
     switch (this.factor) {
       case "Blood Pressure": {
-        this.initChart(this.statisticsProvider.recentSystolicBpData, this.recentProfileChartLabel ,"Blood Pressure (mm Hg)")
+        this.initChart(this.statisticsProvider.recentSystolicBpData, this.recentProfileChartLabel, "Blood Pressure (mm Hg)")
         this.recentAnalysis
-         = this.statisticsProvider.getAnalyses(this.factor)
+          = this.statisticsProvider.getAnalyses(this.factor)
         break;
       }
 
       case "Heart Rate": {
-        this.initChart(this.statisticsProvider.recentHrData, this.recentProfileChartLabel ,"Heart Rate (BPM)")
+        this.initChart(this.statisticsProvider.recentHrData, this.recentProfileChartLabel, "Heart Rate (BPM)")
         this.recentAnalysis
-         = this.statisticsProvider.getAnalyses(this.factor)
+          = this.statisticsProvider.getAnalyses(this.factor)
         break;
       }
 
       case "Fitness": {
-        this.initChart(this.statisticsProvider.recentFitnessData, this.recentProfileChartLabel ,"Fitness level")
+        this.initChart(this.statisticsProvider.recentFitnessData, this.recentProfileChartLabel, "Fitness level")
         break;
       }
 
       case "Weight": {
-        this.initChart(this.statisticsProvider.recentWeightData, this.recentProfileChartLabel ,"Weight (Kgs)")
+        this.initChart(this.statisticsProvider.recentWeightData, this.recentProfileChartLabel, "Weight (Kgs)")
         break;
       }
     }
