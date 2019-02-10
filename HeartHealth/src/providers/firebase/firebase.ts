@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase } from "angularfire2/database";
-import { AngularFireStorage } from "angularfire2/storage";
+import { AngularFireDatabase } from '@angular/fire/database';
 import * as firebase from "firebase";
-import { Observable } from 'rxjs';
+import { Observable } from "rxjs/Observable";
+
+
 
 /*
   Generated class for the FirebaseProvider provider.
@@ -19,7 +20,6 @@ export class FirebaseProvider {
 
   constructor(
     public firebaseDatabase: AngularFireDatabase,
-    private firebaseStorage: AngularFireStorage,
 
   ) {
     console.log('Hello FirebaseProvider Provider');
@@ -34,13 +34,20 @@ export class FirebaseProvider {
    */
   public async setObjectToFirebaseListWithTheGivenID(nodeRef, object, id?) {
     const objectId = (id) ? id : this.firebaseAuthor.currentUser.uid;
-    return new Promise((res, rej) => {
-      firebase.database().ref().child(nodeRef).child(objectId).set(object).then(() => {
-        res();
-      }).catch((error) => {
-        rej(error);
-      })
-    })
+    // return new Promise((resolve, reject) => {
+
+    //   this.angularFireStore.collection(nodeRef).doc(id).set(object).then(()=>{
+    //     resolve();
+    //   }).catch(error => reject(error))
+    //   //   firebase.database().ref().child(nodeRef).child(objectId).set(object).then(() => {
+    //   //     res();
+    //   //   }).catch((error) => {
+    //   //     rej(error);
+    //   //   })
+
+
+
+    // })
   }
 
   /**
@@ -61,7 +68,8 @@ export class FirebaseProvider {
    * @return Observable list retrieved from the node in firebase.
    */
   public getObservables(nodeReference): Observable<any> {
-    return this.firebaseDatabase.list(nodeReference).snapshotChanges();
+   return this.firebaseDatabase.list(nodeReference).snapshotChanges();
+  
   }
 
   /**
@@ -71,8 +79,8 @@ export class FirebaseProvider {
   */
   public getObservablesByMatch(nodeReference, orderByChildValue, value?): Observable<any> {
     value = (value) ? value : this.firebaseAuthor.currentUser.uid
-    return this.firebaseDatabase.list(nodeReference, ref => ref.orderByChild(orderByChildValue).equalTo(value)).snapshotChanges();
-
+    //return this.firebaseDatabase.list(nodeReference, ref => ref.orderByChild(orderByChildValue).equalTo(value)).snapshotChanges();
+  return null
   }
 
 
@@ -120,7 +128,8 @@ export class FirebaseProvider {
    * @param objectKey: key of the object to be removed from the nodeReference. 
    */
   public removeObjectFromGivenNodeReference(nodeReference, objectKey) {
-    return this.firebaseDatabase.list(nodeReference).remove(objectKey)
+    //return this.firebaseDatabase.list(nodeReference).remove(objectKey)
+      return null
   }
 
 

@@ -29,7 +29,7 @@ export class PredictionPage {
 
   test(){
     console.log("Test Called in page")
-    this.predictionProvider.test()
+    // this.predictionProvider.test()
   }
 
 }

@@ -43,6 +43,7 @@ export class SignUpPage {
     this.listOfDoctors = this.firebaseProvider.getObservables("doctors")
     
     
+    
     // subscribe(data => {
     //   this.listOfDoctors = data
     // });
