@@ -4,7 +4,7 @@ import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { AuthenticationProvider } from "../../../providers/authentication/authentication";
 import { User } from "../../../models/user.model";
 import { FirebaseProvider } from "../../../providers/firebase/firebase";
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 
 /**
  * Generated class for the SignUpPage page.
@@ -16,7 +16,7 @@ import { Observable } from 'rxjs';
 @IonicPage()
 @Component({
   selector: 'page-sign-up',
-  templateUrl: 'sign-up.html',
+  templateUrl: 'sign-up.html', 
 })
 export class SignUpPage {
 
