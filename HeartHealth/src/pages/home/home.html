@@ -24,8 +24,17 @@
       </ion-item>
     </ion-card-content>
   </ion-card>
-  
+
   <ion-card>
+    <ion-card-header>
+      BMI
+    </ion-card-header>
+    <ion-card-content>
+      <progress-bar  [progress]="20"></progress-bar>
+    </ion-card-content>
+  </ion-card>
+  
+  <ion-card *ngIf = "!isDoctor">
     <ion-card-header>Please fill all the fields</ion-card-header>
     <ion-card-content>
       <form [formGroup]="form">

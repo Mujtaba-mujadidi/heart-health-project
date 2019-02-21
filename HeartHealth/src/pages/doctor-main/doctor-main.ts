@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Observable } from "rxjs";
 import { FirebaseProvider } from "../../providers/firebase/firebase";
 import { AuthenticationProvider } from "../../providers/authentication/authentication";
+import { TabsPage } from "../tabs/tabs";
 
 /**
  * Generated class for the DoctorMainPage page.
@@ -56,5 +57,8 @@ export class DoctorMainPage {
     this.authenticationProvider.rejectPatientRegistration(patient)
   }
 
+  viewPatient(patient){
+    this.navCtrl.push(TabsPage, patient.key)
+  }
 
 }
