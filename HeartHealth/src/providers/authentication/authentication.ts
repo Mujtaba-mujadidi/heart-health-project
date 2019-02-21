@@ -9,7 +9,8 @@ import { FirebaseProvider } from "../firebase/firebase";
 */
 @Injectable()
 export class AuthenticationProvider {
-
+  
+  isDoctor = false
   constructor(
     private firebaseProvider: FirebaseProvider
   ) {
@@ -24,6 +25,7 @@ export class AuthenticationProvider {
     return new Promise((resolve, reject) => {
       this.firebaseProvider.signIn(email, password).then(() => {
         this.firebaseProvider.getObjectFromNodeReferenceWithTheMatchingId("userType").then(object => {
+          this.isDoctor = object.type == "doctor"
           resolve(object)
         }).catch(error => reject("Please await for your registration to be approved"))
       }).catch(error => reject(error))

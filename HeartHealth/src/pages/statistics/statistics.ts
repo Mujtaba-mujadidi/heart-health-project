@@ -19,8 +19,7 @@ import { StatisticsProvider } from "../../providers/statistics/statistics";
 export class StatisticsPage {
 
   factor = ""
-  recentAnalysis
-  = []
+  recentAnalysis = []
 
   @ViewChild('barCanvas') barCanvas;
   chartTitle = ""
@@ -29,6 +28,7 @@ export class StatisticsPage {
   recentProfileData = []
   overallProfileData = []
 
+  patientId
 
   barChart: any;
 
@@ -42,7 +42,7 @@ export class StatisticsPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad StatisticsPage');
-    this.statisticsProvider.getPatientsProfile().then(() => {
+    this.statisticsProvider.getPatientsProfile(this.navParams.data).then(() => {
       this.recentProfileChartLabel = this.statisticsProvider.getChartLabelForPatientsRecentProfile();
       this.overallProfileChartLabel = this.statisticsProvider.getChartLabelForPatientsOverallProfile()
     })
@@ -97,7 +97,7 @@ export class StatisticsPage {
 
 
   updateChart() {
-     if (this.barChart !== undefined) {this.barChart.chart.destroy();} //To avoid placing the chart on top of the previous chart
+    if (this.barChart !== undefined) { this.barChart.chart.destroy(); } //To avoid placing the chart on top of the previous chart
     this.recentAnalysis = []
     switch (this.factor) {
       case "Blood Pressure": {
