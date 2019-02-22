@@ -97,10 +97,14 @@ export class FirebaseProvider {
     })
   }
 
-  getPatientsRecentProfile(id?): Promise<any> {
+  getPatientsRecentProfile(id?, length?): Promise<any> {
     const childId = (id) ? id : this.loggedInUserUID
+    length = (length)? length: 5
+
+    console.log(length)
+
     return new Promise((resolve, reject) => {
-      firebase.database().ref("patientsHealth").child(childId).limitToLast(5).once('value', snapshot => {
+      firebase.database().ref("patientsHealth").child(childId).limitToLast(length).once('value', snapshot => {
         if (snapshot.val()) {
           resolve(snapshot.val())
         } else {

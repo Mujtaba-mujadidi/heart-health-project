@@ -1,12 +1,14 @@
 page-home {
-    .card{
+    .content {
+        background-color: lightgrey
+    }
+    .card {
         margin: 1px;
         width: 100%;
         margin-top: 10px;
     }
-
-    .patient_details{
-        ion-label{
+    .patient_details {
+        ion-label {
             font-size: 0.7em;
         }
     }
