@@ -10,16 +10,14 @@ import { FirebaseProvider } from "../firebase/firebase";
 @Injectable()
 export class StatisticsProvider {
 
-  patientsRecentProfile: any
   patientsOverallProfile: any
-  recentProfileChartLabel = []
-  recentSystolicBpData = []
-  recentDiastolicBpData = []
-  recentHrData = []
-  recentFitnessData = []
-  recentWeightData = []
-  overallProfileChartLabel = []
 
+  chartLabel = []
+  systolicBpData = []
+  diastolicBpData = []
+  heartRateData = []
+  fitnessData = []
+  weightData = []
   recentAnalysis = []
 
 
@@ -29,69 +27,90 @@ export class StatisticsProvider {
     console.log('Hello StatisticsProvider Provider');
   }
 
-  getPatientsProfile(id?) {
-    return new Promise((resolve, reject) => {
-      this.firebaseProvider.getObjectFromNodeReferenceWithTheMatchingId("patientsHealth", id).then(data => {
-        this.patientsOverallProfile = data
+  /**
+   * To retrieve patients health profile
+   * @param id: ID of the logged in patient or ID of the patient that the doctor wants to monitor.
+   * @param length: Period of time for which the patient/doctor wants to have access to patients health profile. If not provided, the last recent 5 records will be retrieved
+   * @param minDate
+   */
+  public async getPatientsHealthProfile(id?, length?, minDate?) {
+    return new Promise(async (resolve, reject) => {
+      await this.resetData()
+      this.firebaseProvider.getPatientsRecentProfile(id, length).then((data) => {
         Object.keys(data).forEach(key => {
-          this.overallProfileChartLabel.push(key)
+          if (minDate && new Date(key) >= new Date(minDate) || !minDate) {
+            this.chartLabel.push(key)
+            this.systolicBpData.push(data[key].systolicBloodPressure)
+            this.diastolicBpData.push(data[key].diastolicBloodPressure)
+            this.heartRateData.push(data[key].hearRate)
+            this.fitnessData.push(data[key].fitnessLength)
+            this.weightData.push(data[key].weight)
+          }
         })
-      }).then(() => {
-        this.firebaseProvider.getPatientsRecentProfile(id).then(data => {
-          this.patientsRecentProfile = data
-          Object.keys(data).forEach(key => {
-            this.recentProfileChartLabel.push(key)
-            this.recentSystolicBpData.push(data[key].systolicBloodPressure)
-            this.recentDiastolicBpData.push(data[key].diastolicBloodPressure)
-            this.recentHrData.push(data[key].hearRate)
-            this.recentFitnessData.push(data[key].fitnessLength)
-            this.recentWeightData.push(data[key].weight)
-          })
-          resolve()
-        })
+        resolve()
       })
+
     })
-
   }
 
-  getChartLabelForPatientsRecentProfile() {
-    return this.recentProfileChartLabel
+  /**
+   * To reset list of data
+   */
+  private resetData() {
+    return new Promise((resolve, reject) => {
+      this.chartLabel = []
+      this.systolicBpData = []
+      this.diastolicBpData = []
+      this.heartRateData = []
+      this.fitnessData = []
+      this.weightData = []
+      resolve()
+    })
   }
 
-  getChartLabelForPatientsOverallProfile() {
-    return this.overallProfileChartLabel
+
+  getChartLabelForPatientsHealthProfile() {
+    return this.chartLabel
   }
+
 
   getBloodPressureData() {
 
   }
 
   getAnalyses(factor) {
-    switch (factor) {
-      case "Blood Pressure":
-        return this.analyseBloodPressure();
-      case "Heart Rate":
-        return this.analyseHeartRate()
+    if (this.systolicBpData.length == 0) {
+      this.recentAnalysis = [];
+      return []
+    } else {
+      if (this.systolicBpData == []) console.log("Test");
+      switch (factor) {
+        case "Blood Pressure":
+          return this.analyseBloodPressure();
+        case "Heart Rate":
+          return this.analyseHeartRate()
+      }
     }
   }
 
   analyseBloodPressure() {
     this.recentAnalysis = [];
-    const dataSize = this.recentProfileChartLabel.length;
+    if (this.systolicBpData == []) return
+    const dataSize = this.chartLabel.length;
     let toReturn = "";
-    const systolicBP = (this.recentSystolicBpData[0] < 140) ? "within normal range \(< 140 mmHg\)" : "above the normal range \(>=140mmHg\)"
-    toReturn += "On " + this.recentProfileChartLabel[0] + " your Systolic Blood Pressure was " + systolicBP
-    let averageSystolicBloodPressure = parseInt(this.recentSystolicBpData[0]);
+    const systolicBP = (this.systolicBpData[0] < 140) ? "within normal range \(< 140 mmHg\)" : "above the normal range \(>=140mmHg\)"
+    toReturn += "On " + this.chartLabel[0] + " your Systolic Blood Pressure was " + systolicBP
+    let averageSystolicBloodPressure = parseInt(this.systolicBpData[0]);
 
-    this.recentAnalysis.push("On " + this.recentProfileChartLabel[0] + " your Systolic Blood Pressure was " + systolicBP)
+    this.recentAnalysis.push("On " + this.chartLabel[0] + " your Systolic Blood Pressure was " + systolicBP)
 
 
     for (let i = 1; i < dataSize; i++) {
-      const systolicBP = (this.recentSystolicBpData[i] < 140) ? "within normal range \(< 140 mmHg\)" : "above the normal range \(>=140mmHg\)"
-      const comparison = (this.recentSystolicBpData[i] > this.recentSystolicBpData[i - 1]) ? "increased by " + (this.recentSystolicBpData[i] - this.recentSystolicBpData[i - 1]) : (this.recentSystolicBpData[i] < this.recentSystolicBpData[i - 1]) ? "decreased by " + (this.recentSystolicBpData[i - 1] - this.recentSystolicBpData[i]) : " remained the same "
-      toReturn += "\n\nOn " + this.recentProfileChartLabel[i] + " your Systolic Blood Pressure " + comparison + " to " + this.recentSystolicBpData[i] + " mmHg which is " + systolicBP
-      this.recentAnalysis.push("On " + this.recentProfileChartLabel[i] + " your Systolic Blood Pressure " + comparison + " to " + this.recentSystolicBpData[i] + " mmHg which is " + systolicBP)
-      averageSystolicBloodPressure += parseInt(this.recentSystolicBpData[i])
+      const systolicBP = (this.systolicBpData[i] < 140) ? "within normal range \(< 140 mmHg\)" : "above the normal range \(>=140mmHg\)"
+      const comparison = (this.systolicBpData[i] > this.systolicBpData[i - 1]) ? "increased by " + (this.systolicBpData[i] - this.systolicBpData[i - 1]) : (this.systolicBpData[i] < this.systolicBpData[i - 1]) ? "decreased by " + (this.systolicBpData[i - 1] - this.systolicBpData[i]) : " remained the same "
+      toReturn += "\n\nOn " + this.chartLabel[i] + " your Systolic Blood Pressure " + comparison + " to " + this.systolicBpData[i] + " mmHg which is " + systolicBP
+      this.recentAnalysis.push("On " + this.chartLabel[i] + " your Systolic Blood Pressure " + comparison + " to " + this.systolicBpData[i] + " mmHg which is " + systolicBP)
+      averageSystolicBloodPressure += parseInt(this.systolicBpData[i])
 
     }
 
@@ -105,20 +124,21 @@ export class StatisticsProvider {
 
   analyseHeartRate() {
     this.recentAnalysis = [];
-    const dataSize = this.recentProfileChartLabel.length;
+    if (this.heartRateData == []) return
+    const dataSize = this.chartLabel.length;
     let toReturn = "";
-    const heartRate = (this.recentHrData[0] <= 100) ? "within normal range \(<= 100 BPM\)" : "above the normal range \(> 100BPM\)"
-    toReturn += "On " + this.recentProfileChartLabel[0] + " your Heart rate was " + heartRate
-     this.recentAnalysis.push("On " + this.recentProfileChartLabel[0] + " your Heart rate was " + heartRate);
+    const heartRate = (this.heartRateData[0] <= 100) ? "within normal range \(<= 100 BPM\)" : "above the normal range \(> 100BPM\)"
+    toReturn += "On " + this.chartLabel[0] + " your Heart rate was " + heartRate
+    this.recentAnalysis.push("On " + this.chartLabel[0] + " your Heart rate was " + heartRate);
 
-    let averageHeartRate = parseInt(this.recentHrData[0]);
+    let averageHeartRate = parseInt(this.heartRateData[0]);
 
     for (let i = 1; i < dataSize; i++) {
-      const heartRate = (this.recentSystolicBpData[i] < 140) ? "within normal range \(<= 100 BPM\)" : "above the normal range \(> 100BPM\)"
-      const comparison = (this.recentHrData[i] > this.recentHrData[i - 1]) ? "increased by " + (this.recentHrData[i] - this.recentHrData[i - 1]) : (this.recentHrData[i] < this.recentHrData[i - 1]) ? "decreased by " + (this.recentHrData[i - 1] - this.recentHrData[i]) : " remained the same "
-      toReturn += "\n\nOn " + this.recentProfileChartLabel[i] + " your Heart Rate " + comparison + " to " + this.recentHrData[i] + " BPM which is " + heartRate
-      this.recentAnalysis.push("On " + this.recentProfileChartLabel[i] + " your Heart Rate " + comparison + " to " + this.recentHrData[i] + " BPM which is " + heartRate)
-      averageHeartRate += parseInt(this.recentHrData[i])
+      const heartRate = (this.systolicBpData[i] < 140) ? "within normal range \(<= 100 BPM\)" : "above the normal range \(> 100BPM\)"
+      const comparison = (this.heartRateData[i] > this.heartRateData[i - 1]) ? "increased by " + (this.heartRateData[i] - this.heartRateData[i - 1]) : (this.heartRateData[i] < this.heartRateData[i - 1]) ? "decreased by " + (this.heartRateData[i - 1] - this.heartRateData[i]) : " remained the same "
+      toReturn += "\n\nOn " + this.chartLabel[i] + " your Heart Rate " + comparison + " to " + this.heartRateData[i] + " BPM which is " + heartRate
+      this.recentAnalysis.push("On " + this.chartLabel[i] + " your Heart Rate " + comparison + " to " + this.heartRateData[i] + " BPM which is " + heartRate)
+      averageHeartRate += parseInt(this.heartRateData[i])
     }
 
     toReturn += "\n\nOn average your recent Heart Rate was " + ~~(averageHeartRate / dataSize) + " BPM"
@@ -128,6 +148,6 @@ export class StatisticsProvider {
   }
 
   analyseWeight(factor) {
-    
+
   }
 }

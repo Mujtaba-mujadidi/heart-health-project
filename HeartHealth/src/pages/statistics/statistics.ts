@@ -18,19 +18,20 @@ import { StatisticsProvider } from "../../providers/statistics/statistics";
 })
 export class StatisticsPage {
 
-  factor = ""
-  recentAnalysis = []
-
-  @ViewChild('barCanvas') barCanvas;
-  chartTitle = ""
-  recentProfileChartLabel = []
-  overallProfileChartLabel = []
-  recentProfileData = []
-  overallProfileData = []
-
-  patientId
-
+  @ViewChild('barCanvas') barCanvas
   barChart: any;
+
+  // @ViewChild('lineCanvas') lineCanvas
+  // lineChart: any
+
+  riskFactor = "Blood Pressure"
+  patientHealthProfileLength = "0"
+
+
+
+  recentAnalysis = []
+  chartTitle = ""
+  healthProfileChartLabel = []
 
   constructor(
     public navCtrl: NavController,
@@ -42,19 +43,43 @@ export class StatisticsPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad StatisticsPage');
-    this.statisticsProvider.getPatientsProfile(this.navParams.data).then(() => {
-      this.recentProfileChartLabel = this.statisticsProvider.getChartLabelForPatientsRecentProfile();
-      this.overallProfileChartLabel = this.statisticsProvider.getChartLabelForPatientsOverallProfile()
-    })
-    // const g = this.barCanvas.nativeElement as HTMLInputElement
-
-    // g.onchange= ()=>{
-    //   console.log("Element is changing")
-    // }
-
+    this.retrievePatientHealthProfile()
   }
 
-  initChart(data, labels, title) {
+  retrievePatientHealthProfile(patientHealthProfileLength?, startDate?) {
+    this.statisticsProvider.getPatientsHealthProfile(this.navParams.data, patientHealthProfileLength, startDate).then(() => {
+      this.healthProfileChartLabel = this.statisticsProvider.getChartLabelForPatientsHealthProfile();
+      this.updateChart()
+    })
+  }
+
+  /**
+   * To retrieve Patients health profile for given period of time
+   */
+  private getPatientHealthProfileForGivenPeriodOfTime() {
+    switch (this.patientHealthProfileLength) {
+      case "0": { //rRetrieve the most recent 5 records
+        this.retrievePatientHealthProfile()
+      }
+      default: {
+        const options = { day: 'numeric', month: 'long', year: 'numeric' }; //To Format Date
+        const tempDate = new Date(); //Initialised to todays date
+        tempDate.setDate(tempDate.getDate() - parseInt(this.patientHealthProfileLength)) //Converted to the date that is n date before today
+        const startDate = tempDate.toLocaleDateString("en-gb", options)
+        this.retrievePatientHealthProfile(parseInt(this.patientHealthProfileLength), startDate)
+      }
+
+    }
+  }
+
+  /**
+   * Initialises the Bar chart to visualise patients record
+   * @param data 
+   * @param labels 
+   * @param title 
+   */
+  private initBarChart(data, labels, title) {
+    const len = data.length
     this.barChart = new Chart(this.barCanvas.nativeElement, {
       type: 'bar',
       data: {
@@ -62,22 +87,8 @@ export class StatisticsPage {
         datasets: [{
           label: title,
           data: data,
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)'
-          ],
-          borderColor: [
-            'rgba(255,99,132,1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)'
-          ],
+          backgroundColor: Array(len).fill('rgba(255, 99, 132, 0.2)'),
+          borderColor: Array(len).fill('rgba(255,99,132,1)'),
           borderWidth: 1
         }]
       },
@@ -90,37 +101,75 @@ export class StatisticsPage {
           }]
         }
       }
-
     });
   }
 
+  // initLineChart(data, labels, title) {
+  //   this.lineChart = new Chart(this.lineCanvas.nativeElement, {
 
+  //     type: 'line',
+  //     data: {
+  //       labels: labels,
+  //       datasets: [
+  //         {
+  //           label: "My First dataset",
+  //           fill: false,
+  //           lineTension: 0.1,
+  //           backgroundColor: "rgba(75,192,192,0.4)",
+  //           borderColor: "rgba(75,192,192,1)",
+  //           borderCapStyle: 'butt',
+  //           borderDash: [],
+  //           borderDashOffset: 0.0,
+  //           borderJoinStyle: 'miter',
+  //           pointBorderColor: "rgba(75,192,192,1)",
+  //           pointBackgroundColor: "#fff",
+  //           pointBorderWidth: 1,
+  //           pointHoverRadius: 5,
+  //           pointHoverBackgroundColor: "rgba(75,192,192,1)",
+  //           pointHoverBorderColor: "rgba(220,220,220,1)",
+  //           pointHoverBorderWidth: 2,
+  //           pointRadius: 1,
+  //           pointHitRadius: 10,
+  //           data: data,
+  //           spanGaps: false,
+  //         }
+  //       ]
+  //     }
 
-  updateChart() {
+  //   });
+
+  // }
+
+  /**
+   * Update chart to visualise patients records for the selected risk factor
+   */
+  private updateChart() {
     if (this.barChart !== undefined) { this.barChart.chart.destroy(); } //To avoid placing the chart on top of the previous chart
+
     this.recentAnalysis = []
-    switch (this.factor) {
+
+    switch (this.riskFactor) {
       case "Blood Pressure": {
-        this.initChart(this.statisticsProvider.recentSystolicBpData, this.recentProfileChartLabel, "Blood Pressure (mm Hg)")
-        this.recentAnalysis
-          = this.statisticsProvider.getAnalyses(this.factor)
+        this.initBarChart(this.statisticsProvider.systolicBpData, this.healthProfileChartLabel, "Blood Pressure (mm Hg)")
+        this.recentAnalysis = this.statisticsProvider.getAnalyses(this.riskFactor)
+        console.log("View Blood Pressure")
+        //this.initLineChart(this.statisticsProvider.systolicBpData, this.healthProfileChartLabel, "Blood Pressure (mm Hg)")
         break;
       }
 
       case "Heart Rate": {
-        this.initChart(this.statisticsProvider.recentHrData, this.recentProfileChartLabel, "Heart Rate (BPM)")
-        this.recentAnalysis
-          = this.statisticsProvider.getAnalyses(this.factor)
+        this.initBarChart(this.statisticsProvider.heartRateData, this.healthProfileChartLabel, "Heart Rate (BPM)")
+        this.recentAnalysis = this.statisticsProvider.getAnalyses(this.riskFactor)
         break;
       }
 
       case "Fitness": {
-        this.initChart(this.statisticsProvider.recentFitnessData, this.recentProfileChartLabel, "Fitness level")
+        this.initBarChart(this.statisticsProvider.fitnessData, this.healthProfileChartLabel, "Fitness level")
         break;
       }
 
       case "Weight": {
-        this.initChart(this.statisticsProvider.recentWeightData, this.recentProfileChartLabel, "Weight (Kgs)")
+        this.initBarChart(this.statisticsProvider.weightData, this.healthProfileChartLabel, "Weight (Kgs)")
         break;
       }
     }
