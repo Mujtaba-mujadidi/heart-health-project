@@ -19,17 +19,254 @@ export class PredictionProvider {
     console.log('Hello PredictionProvider Provider');
   }
 
-  predectHardCoronaryHeartDisease() {
-    const agePoint = this.getPointByAge(27, true)
-    const cholesterolPoint = this.getTotalCholesterolPoint(30, 170, true)
-    const smokingPoint = this.getSmokingPoint(27, false, true)
-    const hdlPoint = this.getHdlPoint(80)
-    const systolicBPPoint = this.getSystolicBPPoint(130, false, true)
-    console.log("Prediction is: ", this.getTotalPoint(agePoint + cholesterolPoint + smokingPoint + hdlPoint + systolicBPPoint, true))
+  predictRecurrentCoronaryHearDiseaseRisk() {
+    const agePoint = this.getPointByAgeForRCHD(27, true)
+    const cholesterolAndHDLPoints = this.getTotalCholesterolAndHDLPointsForRCHD(170, 30, true)
+    const smokingPoint = (true)?  0 : (false)? 4 : 0
+    const systolicBPPoint = this.getSystolicBPPointForRCHD(130)
+    const diabeticPoint = this.getDiabeticPointForRCHD(true, true)
+    console.log("Prediction is: ", this.getTotalPointForRCHD(agePoint + cholesterolAndHDLPoints + smokingPoint + diabeticPoint + systolicBPPoint, true))
+  }
+
+  private getPointByAgeForRCHD(age, isMale) {
+    if (age >= 35 && age <= 39) return (isMale) ? 0 : 0
+    if (age >= 40 && age <= 44) return (isMale) ? 1 : 1
+    if (age >= 45 && age <= 49) return (isMale) ? 3 : 2
+    if (age >= 50 && age <= 54) return (isMale) ? 4 : 3
+    if (age >= 55 && age <= 59) return (isMale) ? 6 : 4
+    if (age >= 60 && age <= 64) return (isMale) ? 7 : 5
+    if (age >= 65 && age <= 69) return (isMale) ? 9 : 6
+    if (age >= 70 && age <= 74) return (isMale) ? 10 : 7
+  }
+
+  private getDiabeticPointForRCHD(isDiabetic, isMale){
+    if (isMale) return (isDiabetic)? 4 : 0
+    else return (isDiabetic)? 3 : 0
+  }
+
+
+
+  private getTotalCholesterolAndHDLPointsForRCHD(totalC, hdl, isMale) {
+    if (totalC == 160) {
+      if (hdl == 25) return 10
+      if (hdl == 30) return 9
+      if (hdl == 35) return 7
+      if (hdl == 40) return 6
+      if (hdl == 45) return 5
+      if (hdl == 50) return 4
+      if (hdl == 60) return 3
+      if (hdl == 70) return 1
+      if (hdl == 80) return 0
+    } else if (totalC == 170) {
+      if (hdl == 25) return 11
+      if (hdl == 30) return 9
+      if (hdl == 35) return 8
+      if (hdl == 40) return 7
+      if (hdl == 45) return 6
+      if (hdl == 50) return 5
+      if (hdl == 60) return 3
+      if (hdl == 70) return 2
+      if (hdl == 80) return 1
+    } else if (totalC == 180) {
+      if (hdl == 25) return 11
+      if (hdl == 30) return 10
+      if (hdl == 35) return 8
+      if (hdl == 40) return 7
+      if (hdl == 45) return 6
+      if (hdl == 50) return 5
+      if (hdl == 60) return 4
+      if (hdl == 70) return 2
+      if (hdl == 80) return 1
+    } else if (totalC == 190) {
+      if (hdl == 25) return 12
+      if (hdl == 30) return 10
+      if (hdl == 35) return 9
+      if (hdl == 40) return 8
+      if (hdl == 45) return 7
+      if (hdl == 50) return 6
+      if (hdl == 60) return 4
+      if (hdl == 70) return 3
+      if (hdl == 80) return 2
+    } else if (totalC == 200) {
+      if (hdl == 25) return 12
+      if (hdl == 30) return 11
+      if (hdl == 35) return 9
+      if (hdl == 40) return 8
+      if (hdl == 45) return 7
+      if (hdl == 50) return 6
+      if (hdl == 60) return 5
+      if (hdl == 70) return 3
+      if (hdl == 80) return 2
+    } else if (totalC == 210) {
+      if (hdl == 25) return 13
+      if (hdl == 30) return 11
+      if (hdl == 35) return 10
+      if (hdl == 40) return 9
+      if (hdl == 45) return (isMale) ? 7 : 8
+      if (hdl == 50) return 7
+      if (hdl == 60) return 5
+      if (hdl == 70) return 4
+      if (hdl == 80) return 2
+    } else if (totalC == 220) {
+      if (hdl == 25) return 13
+      if (hdl == 30) return (isMale) ? 11 : 12
+      if (hdl == 35) return 10
+      if (hdl == 40) return 9
+      if (hdl == 45) return 8
+      if (hdl == 50) return 7
+      if (hdl == 60) return 5
+      if (hdl == 70) return 4
+      if (hdl == 80) return 3
+    } else if (totalC == 230) {
+      if (hdl == 25) return (isMale) ? 13 : 14
+      if (hdl == 30) return 12
+      if (hdl == 35) return (isMale) ? 10 : 11
+      if (hdl == 40) return 9
+      if (hdl == 45) return 8
+      if (hdl == 50) return 7
+      if (hdl == 60) return 6
+      if (hdl == 70) return 4
+      if (hdl == 80) return 3
+    } else if (totalC == 240) {
+      if (hdl == 25) return 14
+      if (hdl == 30) return 12
+      if (hdl == 35) return 11
+      if (hdl == 40) return 10
+      if (hdl == 45) return 9
+      if (hdl == 50) return 8
+      if (hdl == 60) return 6
+      if (hdl == 70) return 5
+      if (hdl == 80) return 4
+    } else if (totalC == 250) {
+      if (hdl == 25) return 14
+      if (hdl == 30) return 13
+      if (hdl == 35) return 11
+      if (hdl == 40) return 10
+      if (hdl == 45) return 9
+      if (hdl == 50) return 8
+      if (hdl == 60) return (isMale) ? 6 : 7
+      if (hdl == 70) return 5
+      if (hdl == 80) return 4
+    } else if (totalC == 260) {
+      if (hdl == 25) return 15
+      if (hdl == 30) return 13
+      if (hdl == 35) return 12
+      if (hdl == 40) return (isMale) ? 10 : 11
+      if (hdl == 45) return 9
+      if (hdl == 50) return (isMale) ? 8 : 9
+      if (hdl == 60) return 7
+      if (hdl == 70) return (isMale) ? 5 : 6
+      if (hdl == 80) return 4
+    } else if (totalC == 270) {
+      if (hdl == 25) return 15
+      if (hdl == 30) return 13
+      if (hdl == 35) return 12
+      if (hdl == 40) return 11
+      if (hdl == 45) return 10
+      if (hdl == 50) return 9
+      if (hdl == 60) return 7
+      if (hdl == 70) return 6
+      if (hdl == 80) return 5
+    } else if (totalC == 280) {
+      if (hdl == 25) return 15
+      if (hdl == 30) return 14
+      if (hdl == 35) return 12
+      if (hdl == 40) return 11
+      if (hdl == 45) return 10
+      if (hdl == 50) return 9
+      if (hdl == 60) return (isMale) ? 7 : 8
+      if (hdl == 70) return 6
+      if (hdl == 80) return 5
+    } else if (totalC == 290) {
+      if (hdl == 25) return 16
+      if (hdl == 30) return 14
+      if (hdl == 35) return 13
+      if (hdl == 40) return (isMale) ? 11 : 12
+      if (hdl == 45) return 10
+      if (hdl == 50) return (isMale) ? 9 : 10
+      if (hdl == 60) return 8
+      if (hdl == 70) return (isMale) ? 6 : 7
+      if (hdl == 80) return 5
+    } else if (totalC == 300) {
+      if (hdl == 25) return 16
+      if (hdl == 30) return 14
+      if (hdl == 35) return 13
+      if (hdl == 40) return 12
+      if (hdl == 45) return 11
+      if (hdl == 50) return 10
+      if (hdl == 60) return 8
+      if (hdl == 70) return 7
+      if (hdl == 80) return 6
+    }
+  }
+
+  getTotalPointForRCHD(totalPoint, isMale) {
+    if (isMale) {
+      if (totalPoint = 0) return 3
+      if (totalPoint = 2) return 4
+      if (totalPoint = 4) return 4
+      if (totalPoint = 6) return 5
+      if (totalPoint = 8) return 6
+      if (totalPoint = 10) return 7
+      if (totalPoint = 12) return 8
+      if (totalPoint = 14) return 9
+      if (totalPoint = 16) return 11
+      if (totalPoint = 18) return 13
+      if (totalPoint = 20) return 14
+      if (totalPoint = 22) return 17
+      if (totalPoint = 24) return 19
+      if (totalPoint = 26) return 22
+      if (totalPoint = 28) return 25
+      if (totalPoint = 30) return 29
+
+    }
+    else {
+      if (totalPoint <= 6) return 1
+      if (totalPoint <= 12) return 2
+      if (totalPoint <= 16) return 3
+      if (totalPoint = 18) return 4
+      if (totalPoint <= 22) return 5
+      if (totalPoint = 24) return 7
+      if (totalPoint = 26) return 8
+      if (totalPoint = 28) return 9
+      if (totalPoint = 30) return 11
+      if (totalPoint = 32) return 13
+      if (totalPoint = 34) return 16
+      if (totalPoint = 36) return 19
+      if (totalPoint = 38) return 22
+    }
+  }
+
+
+
+  private getSystolicBPPointForRCHD(sbp) {
+    if (sbp < 110) return 0
+    if (sbp >= 110 && sbp <= 114) return 1
+    if (sbp >= 115 && sbp <= 124) return 3
+    if (sbp >= 125 && sbp <= 134) return 4
+    if (sbp >= 135 && sbp <= 144) return 5
+    if (sbp >= 145 && sbp <= 154) return 6
+    if (sbp >= 155 && sbp <= 164) return 7
+    if (sbp >= 165 && sbp <= 184) return 8
+    if (sbp >= 185 && sbp <= 194) return 9
+    if (sbp >= 195 && sbp <= 214) return 10
+    if (sbp >= 215 && sbp <= 224) return 11
+    if (sbp >= 225 && sbp <= 244) return 12
+    if (sbp >= 245) return 13
+  }
+
+
+  predictHardCoronaryHeartDiseaseRisk() {
+    const agePoint = this.getPointByAgeForCHD(27, true)
+    const cholesterolPoint = this.getTotalCholesterolPointForCHD(30, 170, true)
+    const smokingPoint = this.getSmokingPointForCHD(27, false, true)
+    const hdlPoint = this.getHdlPointForCHD(80)
+    const systolicBPPoint = this.getSystolicBPPointForCHD(130, false, true)
+    console.log("Prediction is: ", this.getTotalPointForCHD(agePoint + cholesterolPoint + smokingPoint + hdlPoint + systolicBPPoint, true))
 
   }
 
-  private getPointByAge(age, isMale) {
+  private getPointByAgeForCHD(age, isMale) {
     if (age >= 20 && age <= 34) return (isMale) ? -9 : -7
     if (age >= 35 && age <= 39) return (isMale) ? -4 : -3
     if (age >= 40 && age <= 44) return (isMale) ? 0 : 0
@@ -42,7 +279,7 @@ export class PredictionProvider {
     if (age >= 75 && age <= 79) return (isMale) ? 13 : 16
   }
 
-  private getTotalCholesterolPoint(age, totalCholesterol, isMale) {
+  private getTotalCholesterolPointForCHD(age, totalCholesterol, isMale) {
     if (totalCholesterol < 160) {
       return 0;
     } else if (totalCholesterol < 199) {
@@ -72,7 +309,7 @@ export class PredictionProvider {
     }
   }
 
-  private getSmokingPoint(age, smoking, isMale) {
+  private getSmokingPointForCHD(age, smoking, isMale) {
     if (smoking == true) {
       if (age >= 20 && age <= 39) return (isMale) ? 8 : 9
       if (age >= 40 && age <= 49) return (isMale) ? 5 : 7
@@ -84,14 +321,14 @@ export class PredictionProvider {
     }
   }
 
-  private getHdlPoint(hdl) {
+  private getHdlPointForCHD(hdl) {
     if (hdl >= 60) return -1
     if (hdl >= 50 && hdl <= 59) return 0
     if (hdl >= 40 && hdl <= 49) return 1
     if (hdl < 40) return 2
   }
 
-  private getSystolicBPPoint(sbp, isTreated, isMale) {
+  private getSystolicBPPointForCHD(sbp, isTreated, isMale) {
     if (sbp < 120) return 0
     if (sbp >= 120 && sbp <= 129) {
       if (isMale) return (isTreated) ? 1 : 0
@@ -113,16 +350,11 @@ export class PredictionProvider {
     }
   }
 
-  private getTotalPoint(totalPoints, isMale) {
+  private getTotalPointForCHD(totalPoints, isMale) {
     if (isMale) {
       if (totalPoints < 0) return 0.5
-      else if (totalPoints == 0) return 1
-      else if (totalPoints == 1) return 1
-      else if (totalPoints == 2) return 1
-      else if (totalPoints == 3) return 1
-      else if (totalPoints == 4) return 1
-      else if (totalPoints == 5) return 2
-      else if (totalPoints == 6) return 2
+      else if (totalPoints <= 4) return 1
+      else if (totalPoints <= 6) return 2
       else if (totalPoints == 7) return 3
       else if (totalPoints == 8) return 4
       else if (totalPoints == 9) return 5
@@ -136,12 +368,8 @@ export class PredictionProvider {
       else if (totalPoints >= 17) return 30
     } else {
       if (totalPoints < 9) return 0.5
-      else if (totalPoints == 9) return 1
-      else if (totalPoints == 10) return 1
-      else if (totalPoints == 11) return 1
-      else if (totalPoints == 12) return 1
-      else if (totalPoints == 13) return 2
-      else if (totalPoints == 14) return 2
+      else if (totalPoints <= 12) return 1
+      else if (totalPoints <= 14) return 2
       else if (totalPoints == 15) return 3
       else if (totalPoints == 16) return 4
       else if (totalPoints == 17) return 5
