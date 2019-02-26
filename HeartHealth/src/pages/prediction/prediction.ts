@@ -29,6 +29,7 @@ export class PredictionPage {
 
   test(){
     console.log("Test Called in page")
+    this.predictionProvider.predictRecurrentCoronaryHearDiseaseRisk()
     // this.predictionProvider.test()
   }
 
