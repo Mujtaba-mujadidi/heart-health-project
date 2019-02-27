@@ -19,7 +19,7 @@ import { DoctorMainPage } from "../../doctor-main/doctor-main";
 })
 export class LoginPage {
 
-  private email = "m@p.com";
+  private email = "muj@g.com";
   private password = "123456"
 
   constructor(

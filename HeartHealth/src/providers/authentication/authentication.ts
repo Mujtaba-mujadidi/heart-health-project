@@ -9,7 +9,7 @@ import { FirebaseProvider } from "../firebase/firebase";
 */
 @Injectable()
 export class AuthenticationProvider {
-  
+
   isDoctor = false
   constructor(
     private firebaseProvider: FirebaseProvider
@@ -32,10 +32,16 @@ export class AuthenticationProvider {
     })
   }
 
-  public registerUser(userType, userObject, potentialPatientDoctorKey?): Promise<any> {
-    const nodeRef = (potentialPatientDoctorKey) ? "potentialPatients" : "doctors"
-    if (potentialPatientDoctorKey) {
-      return this.firebaseProvider.setObjectToFirebaseListWithTheGivenID(nodeRef, { name: userObject.name, dateOfBirth: userObject.dateOfBirth, address: userObject.address, email: userObject.email, doctorKey: potentialPatientDoctorKey })
+  public registerUser(userType, userObject): Promise<any> {
+    const nodeRef = (userType == "patient") ? "potentialPatients" : "doctors"
+
+    if (userType == "patient") {
+      return this.firebaseProvider.setObjectToFirebaseListWithTheGivenID(nodeRef, {
+        name: userObject.name, dateOfBirth: userObject.dateOfBirth,
+        address: userObject.address, email: userObject.email, doctorKey: userObject.doctorKey, isDiabetic: userObject.isDiabetic, 
+        haveHypertension: userObject.haveHypertension, isTreatedForHypertension: userObject.isTreatedForHypertension, isSmoking: userObject.isSmoking
+      })
+
     } else {
       return this.firebaseProvider.setObjectToFirebaseListWithTheGivenID(nodeRef, { name: userObject.name, dateOfBirth: userObject.dateOfBirth, address: userObject.address, email: userObject.email })
     }

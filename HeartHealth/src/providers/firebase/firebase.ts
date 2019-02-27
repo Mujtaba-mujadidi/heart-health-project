@@ -108,7 +108,7 @@ export class FirebaseProvider {
         if (snapshot.val()) {
           resolve(snapshot.val())
         } else {
-          reject("No data for this patient")
+          reject("This patient health profile is empty!")
         }
       }).catch(error => reject(error))
     })

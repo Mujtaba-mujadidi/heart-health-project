@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { Chart } from 'chart.js';
 import { FirebaseProvider } from "../../providers/firebase/firebase";
 import { StatisticsProvider } from "../../providers/statistics/statistics";
@@ -25,9 +25,7 @@ export class StatisticsPage {
   // lineChart: any
 
   riskFactor = "Blood Pressure"
-  patientHealthProfileLength = "0"
-
-
+  patientHealthProfileLength = "0"  //Length of time the patient health profile is required to be retrieved!
 
   recentAnalysis = []
   chartTitle = ""
@@ -36,12 +34,13 @@ export class StatisticsPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    private alertCtrl: AlertController,
     public firebaseProvider: FirebaseProvider,
     public statisticsProvider: StatisticsProvider
   ) {
   }
 
-  ionViewDidLoad() {
+  ionViewWillEnter() {
     console.log('ionViewDidLoad StatisticsPage');
     this.retrievePatientHealthProfile()
   }
@@ -50,6 +49,19 @@ export class StatisticsPage {
     this.statisticsProvider.getPatientsHealthProfile(this.navParams.data, patientHealthProfileLength, startDate).then(() => {
       this.healthProfileChartLabel = this.statisticsProvider.getChartLabelForPatientsHealthProfile();
       this.updateChart()
+    }).catch(error => {
+      this.alertCtrl.create({
+        message: error,
+        buttons: [
+          {
+            text: 'Proceed to home page',
+            handler: () => {
+              console.log(error)
+              this.navCtrl.parent.select(0)
+            }
+          }
+        ]
+      }).present()
     })
   }
 

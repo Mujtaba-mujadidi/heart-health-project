@@ -21,15 +21,125 @@
       <ion-option value="doctor">Doctor</ion-option>
     </ion-select>
   </ion-item>
-
+<!--
   <ion-item *ngIf="userType != '' && userType == 'patient'">
     <ion-label> Select your doctor: </ion-label>
     <ion-select [(ngModel)]="potentialPatientDoctorKey" interface="popover">
       <ion-option *ngFor="let doctor of listOfDoctors | async" [value]="doctor.key">{{doctor.payload.val().name}}</ion-option>
     </ion-select>
-  </ion-item>
+  </ion-item>-->
 
-  <form [formGroup]="registrationForm">
+  <form [formGroup]="registrationFormPatient" *ngIf="userType != '' && userType == 'patient'">
+    <ion-item>
+      <ion-label>Name:</ion-label>
+      <ion-input autocorrect=“on” autocomplete="on" type="text" formControlName="name"></ion-input>
+    </ion-item>
+
+    <ion-item *ngIf="!registrationFormPatient.controls.name.valid  && (registrationFormPatient.controls.name.dirty)">
+      <p class="invalid_input">Please enter your full name.</p>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Date Of Birth:</ion-label>
+      <ion-datetime displayFormat="DD/MMM/YYYY" formControlName="dateOfBirth"></ion-datetime>
+    </ion-item>
+
+    <ion-item *ngIf="!registrationFormPatient.controls.dateOfBirth.valid  && (registrationFormPatient.controls.dateOfBirth.dirty)">
+      <p class="invalid_input">Please enter your date of birth.</p>
+    </ion-item>
+
+
+    <ion-item>
+      <ion-label> Select your doctor: </ion-label>
+      <ion-select formControlName="doctorKey" interface="popover">
+        <ion-option *ngFor="let doctor of listOfDoctors | async" [value]="doctor.key">{{doctor.payload.val().name}}</ion-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item *ngIf="!registrationFormPatient.controls.doctorKey.valid  && (registrationFormPatient.controls.doctorKey.dirty)">
+      <p class="invalid_input">Please select your doctor from the list.</p>
+    </ion-item>
+
+    <ion-item>
+      <ion-label> Do you have Diabetes: </ion-label>
+      <ion-select formControlName="isDiabetic" interface="popover">
+        <ion-option [value]= true > Yes </ion-option>
+        <ion-option [value]= false > No </ion-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item *ngIf="!registrationFormPatient.controls.isDiabetic.valid  && (registrationFormPatient.controls.isDiabetic.dirty)">
+      <p class="invalid_input">Please select if you are diabetic.</p>
+    </ion-item>
+
+    <ion-item>
+      <ion-label> Do you have hypertension: </ion-label>
+      <ion-select formControlName="haveHypertension" interface="popover">
+        <ion-option [value]= true > Yes </ion-option>
+        <ion-option [value]= false > No </ion-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item *ngIf="!registrationFormPatient.controls.haveHypertension.valid  && (registrationFormPatient.controls.haveHypertension.dirty)">
+      <p class="invalid_input">Please select if you have hypertension.</p>
+    </ion-item>
+
+     <ion-item *ngIf = "registrationFormPatient.value.haveHypertension && registrationFormPatient.value.haveHypertension == true">
+      <ion-label text-wrap>Are you being treated for hypertension: </ion-label>
+      <ion-select formControlName="isTreatedForHypertension" interface="popover">
+        <ion-option [value]= true > Yes </ion-option>
+        <ion-option [value]= false > No </ion-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item *ngIf="!registrationFormPatient.controls.isTreatedForHypertension.valid  && (registrationFormPatient.controls.isTreatedForHypertension.dirty)">
+      <p class="invalid_input">Please select if you are being treated for hypertension.</p>
+    </ion-item>
+
+    <ion-item >
+      <ion-label>Do you smoke: </ion-label>
+      <ion-select formControlName="isSmoking" interface="popover">
+        <ion-option [value]= true > Yes </ion-option>
+        <ion-option [value]= false > No </ion-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item *ngIf="!registrationFormPatient.controls.isSmoking.valid  && (registrationFormPatient.controls.isSmoking.dirty)">
+      <p class="invalid_input">Please select if you smoke.</p>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Address:</ion-label>
+      <ion-input autocorrect=“on” autocomplete="on" type="text" formControlName="address"></ion-input>
+    </ion-item>
+
+    <ion-item *ngIf="!registrationFormPatient.controls.address.valid  && (registrationFormPatient.controls.address.dirty)">
+      <p class="invalid_input">Please enter your address.</p>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Email:</ion-label>
+      <ion-input autocorrect=“on” autocomplete="on" type="text" formControlName="email"></ion-input>
+    </ion-item>
+
+    <ion-item *ngIf="!registrationFormPatient.controls.email.valid  && (registrationFormPatient.controls.email.dirty)">
+      <p class="invalid_input">Please enter a valid email.</p>
+    </ion-item>
+
+    <ion-item>
+      <ion-label text-wrap>Password:</ion-label>
+      <ion-input autocorrect=“on” autocomplete="on" type="password" formControlName="password"></ion-input>
+    </ion-item>
+
+    <ion-item *ngIf="!registrationFormPatient.controls.password.valid  && (registrationFormPatient.controls.password.dirty)">
+      <p class="invalid_input">Please enter your password.</p>
+    </ion-item>
+  </form>
+
+
+
+
+  <form [formGroup]="registrationForm" *ngIf=" userType != '' && userType == 'doctor'">
     <ion-item>
       <ion-label>Name:</ion-label>
       <ion-input autocorrect=“on” autocomplete="on" type="text" formControlName="name"></ion-input>
@@ -74,7 +184,7 @@
   </form>
 
 
-  <button ion-button full id="signUp-btn" (click)="signUp()">Register</button>
+  <button ion-button full id="signUp-btn" [disabled] = "userType == '' || userType == 'patient' && !registrationFormPatient.valid || userType == 'doctor' && !registrationForm.valid" (click)="signUp()">Register</button>
 
 
 
