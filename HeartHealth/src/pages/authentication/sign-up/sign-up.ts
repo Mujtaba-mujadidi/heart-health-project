@@ -16,16 +16,17 @@ import { Observable } from 'rxjs/Observable';
 @IonicPage()
 @Component({
   selector: 'page-sign-up',
-  templateUrl: 'sign-up.html', 
+  templateUrl: 'sign-up.html',
 })
 export class SignUpPage {
 
   private emailRegex = /(.)+@(\w)+\.(.)/;
   public registrationForm: FormGroup;
+  private registrationFormPatient: FormGroup;
   private userType = "";
   private potentialPatientDoctorKey = {} as any
   listOfDoctors: Observable<any[]>;
-  
+
   //[{ name: "a" }, { name: "b" }, { name: "c" }]
 
 
@@ -41,9 +42,6 @@ export class SignUpPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad SignupPage');
     this.listOfDoctors = this.firebaseProvider.getObservables("doctors")
-    
-    
-    
     // subscribe(data => {
     //   this.listOfDoctors = data
     // });
@@ -55,30 +53,46 @@ export class SignUpPage {
       dateOfBirth: ['', Validators.required],
       address: ['', Validators.required],
       email: ['', Validators.compose([Validators.pattern(this.emailRegex), Validators.required])],
-      password: ['', Validators.compose([Validators.pattern("[0-9]{6,6}"), Validators.required])],
+      password: ['', Validators.required]
+    });
+
+    this.registrationFormPatient = this.formBuilder.group({
+      name: ['', Validators.compose([Validators.maxLength(30), Validators.pattern('[a-zA-Z ]+ [a-zA-Z ]+'), Validators.required])],
+      dateOfBirth: ['', Validators.required],
+      address: ['', Validators.required],
+      doctorKey: ['', Validators.required],
+      isDiabetic: [Validators.required],
+      isSmoking: [Validators.required],
+      haveHypertension: [Validators.required],
+      isTreatedForHypertension: [false, Validators.required],
+      email: ['', Validators.compose([Validators.pattern(this.emailRegex), Validators.required])],
+      password: ['', Validators.required]
     });
   }
 
   signUp() {
-    const userDetails = this.registrationForm.value
+    const userDetails =  (this.userType == "patient")? this.registrationFormPatient.value : this.registrationForm.value
+
     this.authenticationProvider.signUp(userDetails.email, userDetails.password).then(() => {
       this.registerNewUser(userDetails)
     }).catch((error) => console.log(error))
   }
 
 
-  registerNewUser(userDetails){
+  registerNewUser(userDetails) {
     console.log(this.userType)
-    if (this.userType == "patient"){
-        this.authenticationProvider.registerUser(this.userType, userDetails, this.potentialPatientDoctorKey).then(()=>{
-          alert("Please await for your registration to be approved by your doctor")
-        }).catch((error)=>console.log(error))
-      }else{
-         this.authenticationProvider.registerUser(this.userType, userDetails).then(()=>{
-           alert("Registered successfully!")
-           this.firebaseProvider.setObjectToFirebaseListWithTheGivenID("userType", {type: "doctor"})
-         }).catch((error)=>console.log(error))
-      }
+    if (this.userType == "patient") {
+      this.authenticationProvider.registerUser(this.userType, userDetails).then(() => {
+        alert("Please await for your registration to be approved by your doctor")
+        this.registrationFormPatient.reset()
+      }).catch((error) => console.log(error))
+    } else {
+      this.authenticationProvider.registerUser(this.userType, userDetails).then(() => {
+        alert("Registered successfully!")
+        this.registrationForm.reset()
+        this.firebaseProvider.setObjectToFirebaseListWithTheGivenID("userType", { type: "doctor" })
+      }).catch((error) => console.log(error))
+    }
   }
 
 }

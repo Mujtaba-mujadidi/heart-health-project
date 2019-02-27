@@ -25,6 +25,7 @@
 
   <div [ngSwitch]="doctorMainPageSegment">
     <div *ngSwitchCase="'potentialPatients'">
+      <br>
       <h1 *ngIf="listOfPotentialPatients.length === 0">No Potential Patient</h1>
       <ion-card *ngFor="let patient of listOfPotentialPatients">
         <ion-card-header>{{patient.payload.val().name}}</ion-card-header>

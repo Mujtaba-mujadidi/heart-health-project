@@ -48,7 +48,7 @@ export class StatisticsProvider {
           }
         })
         resolve()
-      })
+      }).catch(error => reject(error))
 
     })
   }
