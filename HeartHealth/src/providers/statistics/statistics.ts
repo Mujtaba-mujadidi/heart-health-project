@@ -34,6 +34,7 @@ export class StatisticsProvider {
    * @param minDate
    */
   public async getPatientsHealthProfile(id?, length?, minDate?) {
+    minDate = (minDate)? this.formatDate(minDate) : minDate
     return new Promise(async (resolve, reject) => {
       await this.resetData()
       this.firebaseProvider.getPatientsRecentProfile(id, length).then((data) => {

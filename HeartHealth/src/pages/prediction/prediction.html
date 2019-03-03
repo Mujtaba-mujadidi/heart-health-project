@@ -16,7 +16,7 @@
 <ion-content padding>
 
 
-  <ion-card [ngStyle]="{'border-left': cardStyle}">
+  <ion-card>
     <ion-item>
       <ion-label text-wrap> Please select yes if you have experienced cardiovascular disease before: </ion-label>
       <ion-select [(ngModel)]="experiencedCHD" interface="popover">
@@ -24,13 +24,46 @@
         <ion-option [value]=false> No </ion-option>
       </ion-select>
     </ion-item>
+
+    <ion-item>
+      <button ion-button full (click)="test()">Test</button>
+    </ion-item>
+
   </ion-card>
 
+  <ion-card [ngStyle]="{'border-left': recentCardStyle}">
+    <ion-card-header text-wrap>
+      <b>This Prediction was based on your recent profile!</b>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <h3><b>Heart Disease Risk: </b>{{predictionObject.recentPrediction}}%</h3>
+        <h3><b>Risk Group: </b>{{riskGroupBasedOnRecentRecord}}</h3>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
 
+  <ion-card [ngStyle]="{'border-left': averageCardStyle}">
+    <ion-card-header text-wrap>
+      <b>This prediction was based on the average of your medical records!</b>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <h3><b>Heart Disease Risk: </b>{{predictionObject.averagePrediction}}%</h3>
+        <h3><b>Risk Group: </b>{{riskGroupBasedOnAverageRecord}}</h3>
+        <p>{{averagePredictionAnalysis}}</p>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
 
-
-
-  <button ion-button full (click)="test()">Test</button>
-
+    <ion-card>
+    <ion-card-header text-wrap>
+     <b>Analysis</b>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
 
 </ion-content>
