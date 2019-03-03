@@ -57,6 +57,24 @@
         </ion-item>
 
         <ion-item>
+          <ion-label text-wrap>Total Cholesterol (mg/dL):</ion-label>
+          <ion-input autocorrect=“on” autocomplete="on" type="number" formControlName="totalCholesterol"></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="!form.controls.totalCholesterol.valid  && (form.controls.totalCholesterol.dirty)">
+          <p class="invalid_input">Please enter your Total Cholesterol.</p>
+        </ion-item>
+
+        <ion-item>
+          <ion-label text-wrap>HDL (mg/dL):</ion-label>
+          <ion-input autocorrect=“on” autocomplete="on" type="number" formControlName="hdlCholesterol"></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="!form.controls.hdlCholesterol.valid  && (form.controls.hdlCholesterol.dirty)">
+          <p class="invalid_input">Please enter your High-density lipoprotein.</p>
+        </ion-item>
+
+        <ion-item>
           <ion-label>Heart Rate (BPM): {{form.value.hearRate}}</ion-label>
           <ion-range min="0" max="150" formControlName="hearRate" pin="true" color="secondary">
             <ion-label range-left>0</ion-label>

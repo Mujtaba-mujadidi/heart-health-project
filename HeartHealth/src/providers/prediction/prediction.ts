@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import 'rxjs/add/operator/map';
+import { FirebaseProvider } from "../firebase/firebase";
 
 /*
   Generated class for the PredictionProvider provider.
@@ -15,14 +16,92 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class PredictionProvider {
 
-  constructor() {
+  constructor(
+    private firebaseProvider: FirebaseProvider
+
+  ) {
     console.log('Hello PredictionProvider Provider');
+  }
+
+  public predict(flag, patientId?) {
+    this.firebaseProvider.getObjectFromNodeReferenceWithTheMatchingId("patients", patientId).then((patient) => {
+
+      var systolicBp = 0
+      var averageSystolicBp = 0
+
+      var heartrateBp = 0
+      var averageHeartrateBp = 0
+
+      var cholesterol = 0
+      var averageCholesterol = 0
+
+      var hdl = 0
+      var averageHdl = 0
+
+      var glucose = 0
+      var averageGlucose = 0
+
+      const isSmoking = patient.isSmoking
+      const isDiabetic = patient.isDiabetic
+      const haveHypertension = patient.haveHypertension
+      const isTreatedForHypertension = patient.isTreatedForHypertension
+      const age = this.getAge(patient.dateOfBirth)
+      const isMale = (patient.sex == "male") ? true : false
+
+      var lastEntry
+
+      this.firebaseProvider.getPatientsRecentProfile(patientId, 360).then(async data => {
+        const size = Object.keys(data).length
+        console.log(data)
+        await Object.keys(data).forEach(key => {
+          lastEntry = data[key]
+          systolicBp += parseInt(data[key].systolicBloodPressure)
+          heartrateBp += parseInt(data[key].hearRate)
+          cholesterol += parseInt(data[key].totalCholesterol)
+          glucose += parseInt(data[key].glucose)
+          hdl += parseInt(data[key].hdlCholesterol) 
+        })
+
+        //    //age, totalCholesterol, hdl, sbp, isTreatedForHypertension, isSmoking, isMale
+
+
+        if (flag) {
+          console.log("(True) Flag = ", flag)
+          
+        } else {
+          this.predictHardCoronaryHeartDiseaseRisk(age, lastEntry.totalCholesterol, lastEntry.hdlCholesterol, lastEntry.systolicBloodPressure, isTreatedForHypertension, isSmoking, isMale)
+          this.predictHardCoronaryHeartDiseaseRisk(age, cholesterol/size, hdl/size, systolicBp/size ,isTreatedForHypertension, isSmoking, isMale)
+          console.log(age, cholesterol/size, hdl/size, systolicBp/size ,isTreatedForHypertension, isSmoking, isMale)
+      }
+      })
+
+
+    })
+
+
+     
+  }
+
+  private getAge(dob) {
+    const dateOfBirth = new Date(dob);
+    const todayDate = new Date()
+
+    const age = todayDate.getFullYear() - dateOfBirth.getFullYear()
+
+    const month = todayDate.getMonth() - dateOfBirth.getMonth()
+
+    /** Based on the current month of the year, if the age is not completed yet, subtract one */
+    return (month < 0 || (month === 0 && todayDate.getDate() < dateOfBirth.getDate())) ? age - 1 : age;
+
+
+
+
   }
 
   predictRecurrentCoronaryHearDiseaseRisk() {
     const agePoint = this.getPointByAgeForRCHD(27, true)
     const cholesterolAndHDLPoints = this.getTotalCholesterolAndHDLPointsForRCHD(170, 30, true)
-    const smokingPoint = (true)?  0 : (false)? 4 : 0
+    const smokingPoint = (true) ? 0 : (false) ? 4 : 0
     const systolicBPPoint = this.getSystolicBPPointForRCHD(130)
     const diabeticPoint = this.getDiabeticPointForRCHD(true, true)
     console.log("Prediction is: ", this.getTotalPointForRCHD(agePoint + cholesterolAndHDLPoints + smokingPoint + diabeticPoint + systolicBPPoint, true))
@@ -39,9 +118,9 @@ export class PredictionProvider {
     if (age >= 70 && age <= 74) return (isMale) ? 10 : 7
   }
 
-  private getDiabeticPointForRCHD(isDiabetic, isMale){
-    if (isMale) return (isDiabetic)? 4 : 0
-    else return (isDiabetic)? 3 : 0
+  private getDiabeticPointForRCHD(isDiabetic, isMale) {
+    if (isMale) return (isDiabetic) ? 4 : 0
+    else return (isDiabetic) ? 3 : 0
   }
 
 
@@ -256,12 +335,12 @@ export class PredictionProvider {
   }
 
 
-  predictHardCoronaryHeartDiseaseRisk() {
-    const agePoint = this.getPointByAgeForCHD(27, true)
-    const cholesterolPoint = this.getTotalCholesterolPointForCHD(30, 170, true)
-    const smokingPoint = this.getSmokingPointForCHD(27, false, true)
-    const hdlPoint = this.getHdlPointForCHD(80)
-    const systolicBPPoint = this.getSystolicBPPointForCHD(130, false, true)
+  predictHardCoronaryHeartDiseaseRisk(age, totalCholesterol, hdl, sbp, isTreatedForHypertension, isSmoking, isMale) {
+    const agePoint = this.getPointByAgeForCHD(age, isMale)
+    const cholesterolPoint = this.getTotalCholesterolPointForCHD(age, totalCholesterol, isMale)
+    const smokingPoint = this.getSmokingPointForCHD(age, isSmoking, isMale)
+    const hdlPoint = this.getHdlPointForCHD(hdl)
+    const systolicBPPoint = this.getSystolicBPPointForCHD(sbp, isTreatedForHypertension, isMale)
     console.log("Prediction is: ", this.getTotalPointForCHD(agePoint + cholesterolPoint + smokingPoint + hdlPoint + systolicBPPoint, true))
 
   }

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { PredictionProvider } from "../../providers/prediction/prediction";
+import { FirebaseProvider } from "../../providers/firebase/firebase";
 
 /**
  * Generated class for the PredictionPage page.
@@ -16,21 +17,26 @@ import { PredictionProvider } from "../../providers/prediction/prediction";
 })
 export class PredictionPage {
 
+
+  experiencedCHD
+
+  cardStyle = "green solid 10px"
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public predictionProvider: PredictionProvider
+    private predictionProvider: PredictionProvider,
+    private firebaseProvider : FirebaseProvider
     ) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad PredictionPage');
+    this.firebaseProvider
   }
 
   test(){
-    console.log("Test Called in page")
-    this.predictionProvider.predictRecurrentCoronaryHearDiseaseRisk()
-    // this.predictionProvider.test()
+    this.predictionProvider.predict(this.experiencedCHD)
   }
 
 }

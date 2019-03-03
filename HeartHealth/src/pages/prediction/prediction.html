@@ -14,5 +14,23 @@
 
 
 <ion-content padding>
+
+
+  <ion-card [ngStyle]="{'border-left': cardStyle}">
+    <ion-item>
+      <ion-label text-wrap> Please select yes if you have experienced cardiovascular disease before: </ion-label>
+      <ion-select [(ngModel)]="experiencedCHD" interface="popover">
+        <ion-option [value]=true> Yes </ion-option>
+        <ion-option [value]=false> No </ion-option>
+      </ion-select>
+    </ion-item>
+  </ion-card>
+
+
+
+
+
   <button ion-button full (click)="test()">Test</button>
+
+
 </ion-content>

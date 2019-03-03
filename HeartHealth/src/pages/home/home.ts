@@ -22,7 +22,7 @@ export class HomePage {
     private navParams: NavParams,
     private formBuilder: FormBuilder,
     private authenticationProvider: AuthenticationProvider,
-    private firebaseProvider: FirebaseProvider
+    private firebaseProvider: FirebaseProvider,
 
   ) {
     this.buildForm();
@@ -31,7 +31,7 @@ export class HomePage {
   ionViewDidLoad() {
     this.isDoctor = this.authenticationProvider.isDoctor
     if (this.authenticationProvider.isDoctor) {
-      this.firebaseProvider.getObjectFromNodeReferenceWithTheMatchingId("patients", this.navParams.data).then((details)=>{
+      this.firebaseProvider.getObjectFromNodeReferenceWithTheMatchingId("patients", this.navParams.data).then((details) => {
         this.patientDetails = details
       })
     } else {
@@ -48,16 +48,18 @@ export class HomePage {
       hearRate: ['72', Validators.required],
       weight: ['', Validators.required],
       glucose: ['', Validators.required],
+      totalCholesterol: ['', Validators.required],
+      hdlCholesterol: ['', Validators.required],
       fitnessLength: ['', Validators.required]
 
     })
   }
 
   submitForm() {
-    const options = { day: 'numeric', month: 'long', year: 'numeric' };
-    const date = new Date().toLocaleDateString("en-gb", options)
+    const today = new Date()
+    const dateFormated = (today.getFullYear()) + "-" + (today.getMonth() + 1) + "-" + ((today.getDate() <= 9) ? ("0" + today.getDate()) : today.getDate());
     const userUid = this.firebaseProvider.getCurrentUserUid();
-    this.firebaseProvider.setObjectToFirebaseListWithTheGivenID("patientsHealth/" + userUid, this.form.value, date);
+    this.firebaseProvider.setObjectToFirebaseListWithTheGivenID("patientsHealth/" + userUid, this.form.value, dateFormated);
   }
 
   analyzeData() {
