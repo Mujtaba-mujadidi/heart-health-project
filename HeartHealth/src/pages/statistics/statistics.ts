@@ -74,11 +74,11 @@ export class StatisticsPage {
         this.retrievePatientHealthProfile()
       }
       default: {
-        const options = { day: 'numeric', month: 'long', year: 'numeric' }; //To Format Date
+        //const options = { day: 'numeric', month: 'short', year: 'numeric' }; //To Format Date
         const tempDate = new Date(); //Initialised to todays date
         tempDate.setDate(tempDate.getDate() - parseInt(this.patientHealthProfileLength)) //Converted to the date that is n date before today
-        const startDate = tempDate.toLocaleDateString("en-gb", options)
-        this.retrievePatientHealthProfile(parseInt(this.patientHealthProfileLength), startDate)
+        //const startDate = tempDate.toLocaleDateString("en-gb", options)
+        this.retrievePatientHealthProfile(parseInt(this.patientHealthProfileLength), tempDate)
       }
 
     }

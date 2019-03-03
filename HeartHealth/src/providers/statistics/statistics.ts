@@ -34,12 +34,14 @@ export class StatisticsProvider {
    * @param minDate
    */
   public async getPatientsHealthProfile(id?, length?, minDate?) {
+    minDate = (minDate)? this.formatDate(minDate) : minDate
     return new Promise(async (resolve, reject) => {
       await this.resetData()
       this.firebaseProvider.getPatientsRecentProfile(id, length).then((data) => {
         Object.keys(data).forEach(key => {
           if (minDate && new Date(key) >= new Date(minDate) || !minDate) {
-            this.chartLabel.push(key)
+            const label = this.formatDate(key)
+            this.chartLabel.push(label)
             this.systolicBpData.push(data[key].systolicBloodPressure)
             this.diastolicBpData.push(data[key].diastolicBloodPressure)
             this.heartRateData.push(data[key].hearRate)
@@ -51,6 +53,15 @@ export class StatisticsProvider {
       }).catch(error => reject(error))
 
     })
+  }
+
+  /**
+   * Coverts date to match the UK date and time format
+   * @param date : date to be formatted
+   */
+  private formatDate(date){
+    const options = { day: 'numeric', month: 'short', year: 'numeric' }; //To Format Date
+    return new Date(date).toLocaleDateString("en-gb", options)
   }
 
   /**
