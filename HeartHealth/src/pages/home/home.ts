@@ -74,7 +74,9 @@ export class HomePage {
 
   submitForm() {
     const today = new Date()
-    const dateFormated = (today.getFullYear()) + "-" + (today.getMonth() + 1) + "-" + ((today.getDate() <= 9) ? ("0" + today.getDate()) : today.getDate());
+    const month = (today.getMonth() + 1 < 10)? ("0" + (today.getMonth()+1)) : (today.getMonth()+1);
+    const day = ((today.getDate() <= 9) ? ("0" + today.getDate()) : today.getDate());
+    const dateFormated = (today.getFullYear()) + "-" + month + "-" + day;
     const userUid = this.firebaseProvider.getCurrentUserUid();
     this.firebaseProvider.setObjectToFirebaseListWithTheGivenID("patientsHealth/" + userUid, this.form.value, dateFormated).then(() => {
       this.calculatePatientsBMI(this.form.value.weight)
