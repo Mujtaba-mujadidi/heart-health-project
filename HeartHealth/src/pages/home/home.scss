@@ -6,6 +6,10 @@ page-home {
         margin: 1px;
         width: 100%;
         margin-top: 10px;
+
+        ion-input{
+            border-bottom: solid 0.04px lightgray
+        }
     }
     .patient_details {
         ion-label {
