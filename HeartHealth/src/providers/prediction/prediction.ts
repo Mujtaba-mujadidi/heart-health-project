@@ -42,7 +42,7 @@ export class PredictionProvider {
         var glucose = 0
         var averageGlucose = 0
 
-        const isSmoking = patient.isSmoking
+        const isSmoking = patient.isSmoking //this is to simulate the prediction with the assumption that the patient is not smoking... this is to indicate how the prediction will change if the patient quits smoking 
         const isDiabetic = patient.isDiabetic
         const haveHypertension = patient.haveHypertension
         const isTreatedForHypertension = patient.isTreatedForHypertension
@@ -63,15 +63,19 @@ export class PredictionProvider {
           })
 
           if (flag) {
+
             const predictionObject = {
               recentPrediction: this.predictRecurrentCoronaryHearDiseaseRisk(age, recentRecord.totalCholesterol, recentRecord.hdlCholesterol, recentRecord.systolicBloodPressure, isDiabetic, isSmoking, isMale),
-              averagePrediction: this.predictRecurrentCoronaryHearDiseaseRisk(age, cholesterol / size, hdl / size, systolicBp / size, isDiabetic, isSmoking, isMale)
+              averagePrediction: this.predictRecurrentCoronaryHearDiseaseRisk(age, cholesterol / size, hdl / size, systolicBp / size, isDiabetic, isSmoking, isMale),
+              test : this.simulatePredictionByRelaxingRiskFactors(age, isDiabetic, isTreatedForHypertension, haveHypertension, recentRecord, isSmoking, isMale, flag)
+              //age, isDiabetic, isTreatedForHypertension, haveHypertension, isBeing, recentRecord, isSmoking, isMale, flag)
             }
             resolve(predictionObject)
           } else {
             const predictionObject = {
               recentPrediction: this.predictHardCoronaryHeartDiseaseRisk(age, recentRecord.totalCholesterol, recentRecord.hdlCholesterol, recentRecord.systolicBloodPressure, isTreatedForHypertension, isSmoking, isMale),
-              averagePrediction: this.predictHardCoronaryHeartDiseaseRisk(age, cholesterol / size, hdl / size, systolicBp / size, isTreatedForHypertension, isSmoking, isMale)
+              averagePrediction: this.predictHardCoronaryHeartDiseaseRisk(age, cholesterol / size, hdl / size, systolicBp / size, isTreatedForHypertension, isSmoking, isMale),
+              test : this.simulatePredictionByRelaxingRiskFactors(age, isDiabetic, isTreatedForHypertension, haveHypertension, recentRecord, isSmoking, isMale, flag)
             }
             resolve(predictionObject)
           }
@@ -81,6 +85,32 @@ export class PredictionProvider {
       })
 
     })
+  }
+
+  private simulatePredictionByRelaxingRiskFactors(age, isDiabetic, isTreatedForHypertension, haveHypertension, recentRecord, isSmoking, isMale, flag) {
+    const cholesterol = recentRecord.totalCholesterol
+    const hdl = recentRecord.hdlCholesterol
+    const sbp = recentRecord.systolicBloodPressure
+
+    if (flag) {
+      const predictionBasedOnRelaxdFactors = {
+        relaxedSmoking: (isSmoking) ? this.predictRecurrentCoronaryHearDiseaseRisk(age, recentRecord.totalCholesterol, recentRecord.hdlCholesterol, recentRecord.systolicBloodPressure, isDiabetic, false, isMale) : undefined,
+        relaxedBloodPressure: (sbp >= 140) ? this.predictRecurrentCoronaryHearDiseaseRisk(age, recentRecord.totalCholesterol, recentRecord.hdlCholesterol, 120, isDiabetic, isSmoking, isMale) : undefined,
+        relaxedCholesterol: (cholesterol >= 200) ? this.predictRecurrentCoronaryHearDiseaseRisk(age, recentRecord.totalCholesterol, 190, recentRecord.systolicBloodPressure, isDiabetic, isSmoking, isMale) : undefined,
+      }
+      return predictionBasedOnRelaxdFactors
+    } else {
+
+      const predictionBasedOnRelaxdFactors = {
+        relaxedSmoking: (isSmoking) ? this.predictHardCoronaryHeartDiseaseRisk(age, recentRecord.totalCholesterol, recentRecord.hdlCholesterol, recentRecord.systolicBloodPressure, isTreatedForHypertension, false, isMale) : undefined,
+        relaxedBloodPressure: (sbp >= 140) ? this.predictHardCoronaryHeartDiseaseRisk(age, recentRecord.totalCholesterol, recentRecord.hdlCholesterol, 120, isTreatedForHypertension, isSmoking, isMale) : undefined,
+        relaxedCholesterol: (cholesterol >= 200) ? this.predictHardCoronaryHeartDiseaseRisk(age, recentRecord.totalCholesterol, 190, recentRecord.systolicBloodPressure, isTreatedForHypertension, isSmoking, isMale) : undefined,
+      }
+       return predictionBasedOnRelaxdFactors
+    }
+
+
+
   }
 
   private getAge(dob) {
@@ -406,9 +436,9 @@ export class PredictionProvider {
     else if (hdl <= 49) return 1
     else if (hdl <= 59) return 0
     else return -1
-   
-    
-    
+
+
+
   }
 
   private getSystolicBPPointForCHD(sbp, isTreated, isMale) {
