@@ -37,8 +37,8 @@ export class AuthenticationProvider {
 
     if (userType == "patient") {
       return this.firebaseProvider.setObjectToFirebaseListWithTheGivenID(nodeRef, {
-        name: userObject.name, dateOfBirth: userObject.dateOfBirth,
-        address: userObject.address, email: userObject.email, doctorKey: userObject.doctorKey, height: userObject.height ,isDiabetic: userObject.isDiabetic, 
+        name: userObject.name, dateOfBirth: userObject.dateOfBirth, didExperienceCardiovascularDisease: userObject.didExperienceCardiovascularDisease,
+        address: userObject.address, email: userObject.email, doctorKey: userObject.doctorKey, height: userObject.height, isDiabetic: userObject.isDiabetic,
         haveHypertension: userObject.haveHypertension, isTreatedForHypertension: userObject.isTreatedForHypertension, isSmoking: userObject.isSmoking
       })
 

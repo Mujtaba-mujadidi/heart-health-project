@@ -22,6 +22,14 @@
         <ion-label text-wrap><b>Email:</b></ion-label>
         <ion-label text-wrap item-end>{{patientDetails.email}}</ion-label>
       </ion-item>
+      <ion-item *ngIf="patientDetails.didExperienceCardiovascularDisease">
+        <ion-label text-wrap><b>Has patient experienced a cardiovascular event:</b></ion-label>
+        <ion-label text-wrap item-end>Yes</ion-label>
+      </ion-item>
+      <ion-item *ngIf="!patientDetails.didExperienceCardiovascularDisease">
+        <ion-label text-wrap><b>Has patient experienced a cardiovascular event:</b></ion-label>
+        <ion-label text-wrap item-end>No</ion-label>
+      </ion-item>
     </ion-card-content>
   </ion-card>
 

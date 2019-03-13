@@ -67,6 +67,14 @@
         <ion-label range-right>Max</ion-label>
       </ion-range>
     </ion-item>
+    
+    <ion-item>
+      <ion-label text-wrap> Have you experience a cardiovascular event before: </ion-label>
+      <ion-select formControlName="didExperienceCardiovascularDisease" interface="popover">
+        <ion-option [value]=t rue> Yes </ion-option>
+        <ion-option [value]=f alse> No </ion-option>
+      </ion-select>
+    </ion-item>
 
     <ion-item>
       <ion-label> Do you have Diabetes: </ion-label>

@@ -59,6 +59,7 @@ export class SignUpPage {
       address: ['', Validators.required],
       doctorKey: ['', Validators.required],
       isDiabetic: [Validators.required],
+      didExperienceCardiovascularDisease: [Validators.required],
       isSmoking: [Validators.required],
       haveHypertension: [Validators.required],
       height: [0.00, Validators.required],

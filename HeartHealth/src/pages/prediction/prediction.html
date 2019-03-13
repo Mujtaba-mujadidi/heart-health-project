@@ -17,17 +17,20 @@
 
 
   <ion-card>
-    <ion-item>
+    <!--<ion-item>
       <ion-label text-wrap> Please select yes if you have experienced cardiovascular disease before: </ion-label>
       <ion-select [(ngModel)]="experiencedCHD" interface="popover">
         <ion-option [value]=true> Yes </ion-option>
         <ion-option [value]=false> No </ion-option>
       </ion-select>
-    </ion-item>
 
-    <ion-item>
-      <button ion-button full (click)="predict()" [disabled]="experiencedCHD == undefined">Predict</button>
-    </ion-item>
+      [disabled]="experiencedCHD == undefined"
+
+    </ion-item>-->
+
+    <!--<ion-item>
+      <button ion-button full (click)="predict()">Predict</button>
+    </ion-item>-->
 
   </ion-card>
 
@@ -56,13 +59,25 @@
         </ion-item>
       </ion-card-content>
     </ion-card>
-
-    <ion-card id="analysis-card">
+    <ion-card>
       <ion-card-header>
         Analysis
       </ion-card-header>
       <ion-card-content>
         <ion-list *ngFor="let str of resultAnalysis">
+          <ion-item no-lines>
+            <p text-wrap>{{str}}</p>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+      <ion-card-header>
+        Simulated Prediction Analysis
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list *ngFor="let str of simulatedResultsAnalysis">
           <ion-item no-lines>
             <p text-wrap>{{str}}</p>
           </ion-item>

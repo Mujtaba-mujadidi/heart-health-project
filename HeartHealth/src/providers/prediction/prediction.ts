@@ -13,8 +13,12 @@ import { FirebaseProvider } from "../firebase/firebase";
   See https://angular.io/guide/dependency-injection for more info on providers
   and Angular DI.
 */
+
 @Injectable()
 export class PredictionProvider {
+
+  predictionMode = ""
+
 
   constructor(
     private firebaseProvider: FirebaseProvider
@@ -23,33 +27,33 @@ export class PredictionProvider {
     console.log('Hello PredictionProvider Provider');
   }
 
-  public predict(flag, patientId?) {
+  public predict(patientId?) {
     return new Promise((resolve, reject) => {
       this.firebaseProvider.getObjectFromNodeReferenceWithTheMatchingId("patients", patientId).then((patient) => {
+        let systolicBp = 0
+        let averageSystolicBp = 0
 
-        var systolicBp = 0
-        var averageSystolicBp = 0
+        let heartrateBp = 0
+        let averageHeartrateBp = 0
 
-        var heartrateBp = 0
-        var averageHeartrateBp = 0
+        let cholesterol = 0
+        let averageCholesterol = 0
 
-        var cholesterol = 0
-        var averageCholesterol = 0
+        let hdl = 0
+        let averageHdl = 0
 
-        var hdl = 0
-        var averageHdl = 0
+        let glucose = 0
+        let averageGlucose = 0
 
-        var glucose = 0
-        var averageGlucose = 0
-
+        const didExperienceCardiovascularDisease = patient.didExperienceCardiovascularDisease
         const isSmoking = patient.isSmoking //this is to simulate the prediction with the assumption that the patient is not smoking... this is to indicate how the prediction will change if the patient quits smoking 
         const isDiabetic = patient.isDiabetic
         const haveHypertension = patient.haveHypertension
         const isTreatedForHypertension = patient.isTreatedForHypertension
         const age = this.getAge(patient.dateOfBirth)
         const isMale = (patient.sex == "male") ? true : false
-
-        var recentRecord
+        this.predictionMode = (patient.didExperienceCardiovascularDisease) ? "Recurrent Coronary Heart Disease (2 Years Risk)" : "Hard Coronary Heart Disease (10 years risk)"
+        let recentRecord
 
         this.firebaseProvider.getPatientsRecentProfile(patientId, 360).then(async data => {
           const size = Object.keys(data).length
@@ -62,24 +66,39 @@ export class PredictionProvider {
             hdl += parseInt(data[key].hdlCholesterol)
           })
 
-          if (flag) {
+          if (didExperienceCardiovascularDisease) {
+            const recentPrediction = this.predictRecurrentCoronaryHearDiseaseRisk(age, recentRecord.totalCholesterol, recentRecord.hdlCholesterol, recentRecord.systolicBloodPressure, isDiabetic, isSmoking, isMale)
+            const averagePrediction = this.predictRecurrentCoronaryHearDiseaseRisk(age, cholesterol / size, hdl / size, systolicBp / size, isDiabetic, isSmoking, isMale)
+            const simulatedPredictionResults = this.simulatePredictionByRelaxingRiskFactors(age, isDiabetic, isTreatedForHypertension, haveHypertension, recentRecord, isSmoking, isMale, didExperienceCardiovascularDisease)
 
             const predictionObject = {
-              recentPrediction: this.predictRecurrentCoronaryHearDiseaseRisk(age, recentRecord.totalCholesterol, recentRecord.hdlCholesterol, recentRecord.systolicBloodPressure, isDiabetic, isSmoking, isMale),
-              averagePrediction: this.predictRecurrentCoronaryHearDiseaseRisk(age, cholesterol / size, hdl / size, systolicBp / size, isDiabetic, isSmoking, isMale),
-              test : this.simulatePredictionByRelaxingRiskFactors(age, isDiabetic, isTreatedForHypertension, haveHypertension, recentRecord, isSmoking, isMale, flag)
-              //age, isDiabetic, isTreatedForHypertension, haveHypertension, isBeing, recentRecord, isSmoking, isMale, flag)
+              recentPrediction: recentPrediction,
+              averagePrediction: averagePrediction,
+              resultAnalysis: (patientId) ? undefined : this.analysePredictionResults(recentPrediction, averagePrediction),
+              simulatedPrediction: {
+                results: simulatedPredictionResults,
+                resultAnalysis: this.analyseSimulatedPredictionResults(simulatedPredictionResults, recentPrediction)
+              }
             }
             resolve(predictionObject)
           } else {
+            const recentPrediction = this.predictHardCoronaryHeartDiseaseRisk(age, recentRecord.totalCholesterol, recentRecord.hdlCholesterol, recentRecord.systolicBloodPressure, isTreatedForHypertension, isSmoking, isMale)
+            const averagePrediction = this.predictHardCoronaryHeartDiseaseRisk(age, cholesterol / size, hdl / size, systolicBp / size, isTreatedForHypertension, isSmoking, isMale)
+            const simulatedPredictionResults = this.simulatePredictionByRelaxingRiskFactors(age, isDiabetic, isTreatedForHypertension, haveHypertension, recentRecord, isSmoking, isMale, didExperienceCardiovascularDisease)
+
+
             const predictionObject = {
-              recentPrediction: this.predictHardCoronaryHeartDiseaseRisk(age, recentRecord.totalCholesterol, recentRecord.hdlCholesterol, recentRecord.systolicBloodPressure, isTreatedForHypertension, isSmoking, isMale),
-              averagePrediction: this.predictHardCoronaryHeartDiseaseRisk(age, cholesterol / size, hdl / size, systolicBp / size, isTreatedForHypertension, isSmoking, isMale),
-              test : this.simulatePredictionByRelaxingRiskFactors(age, isDiabetic, isTreatedForHypertension, haveHypertension, recentRecord, isSmoking, isMale, flag)
+              recentPrediction: recentPrediction,
+              averagePrediction: averagePrediction,
+              resultAnalysis: this.analysePredictionResults(recentPrediction, averagePrediction),
+              simulatedPrediction: {
+                results: simulatedPredictionResults,
+                resultAnalysis: this.analyseSimulatedPredictionResults(simulatedPredictionResults, recentPrediction)
+              }
             }
             resolve(predictionObject)
           }
-        })
+        }).catch(error => reject(error))
 
 
       })
@@ -87,12 +106,57 @@ export class PredictionProvider {
     })
   }
 
-  private simulatePredictionByRelaxingRiskFactors(age, isDiabetic, isTreatedForHypertension, haveHypertension, recentRecord, isSmoking, isMale, flag) {
+  private analyseSimulatedPredictionResults(simulatedPredictionResults, recentPrediction) {
+    console.log("analyseSimulatedPredictionResults called")
+    let analysis = []
+    const relaxedSmokingPredictionResult = simulatedPredictionResults.relaxedSmoking
+    const relaxedBloodPressurePredictionResult = simulatedPredictionResults.relaxedBloodPressure
+    const relaxedCholesterolPredictionResult = simulatedPredictionResults.relaxedCholesterol
+
+    analysis.push("Prediction results based on simulations: ")
+
+    if (relaxedSmokingPredictionResult && relaxedSmokingPredictionResult < recentPrediction) {
+      analysis.push("In this simulation the patient is assumed to be a non smoker. As result, the risk of the patient developing " + this.predictionMode + " is reduced by " + (recentPrediction - relaxedSmokingPredictionResult) + "% to " + relaxedSmokingPredictionResult + "%")
+    }
+
+    if (relaxedBloodPressurePredictionResult && relaxedBloodPressurePredictionResult < recentPrediction) {
+      analysis.push("In this simulation the patient is assumed to have a normal systolic blood pressure (< 140mmHg). As result, the risk of the patient developing " + this.predictionMode + " is reduced by " + (recentPrediction - relaxedBloodPressurePredictionResult) + "% to " + relaxedBloodPressurePredictionResult + "%")
+    }
+
+    if (relaxedCholesterolPredictionResult && relaxedCholesterolPredictionResult < recentPrediction) {
+      analysis.push("In this simulation the patient is assumed to have a normal blood cholesterol (< 200mg/dl). As result, the risk of the patient developing " + this.predictionMode + " is reduced by " + (recentPrediction - relaxedCholesterolPredictionResult) + "% to " + relaxedCholesterolPredictionResult + "%")
+    }
+
+    return analysis
+
+  }
+
+  private analysePredictionResults(recentPrediction, averagePrediction) {
+    let resultAnalysis = []
+    const riskGroupBasedOnRecentRecord = (recentPrediction <= 10) ? "Low Risk Group" : (recentPrediction <= 20) ? "Intermediate Risk Group" : "High Risk Group"
+    const riskGroupBasedOnAverageRecord = (averagePrediction <= 20) ? "Low Risk Group" : (averagePrediction <= 20) ? "Intermediate Risk Group" : "High Risk Group"
+
+    const x = (recentPrediction > 10) ? "Patients within Intermediate and High risk groups are strongly advised to consult with their doctor on how they can change their life style to improve their health!" : ""
+    const y = (averagePrediction > 10) ? "Patients within Intermediate and High risk groups are strongly advised to consult with their doctor on how they can change their life style to improve their health!" : ""
+
+    resultAnalysis[0] = "Analysis of the results based on patients recent medical records:"
+    resultAnalysis.push("Based on your recent records you are within " + riskGroupBasedOnRecentRecord + " with " + recentPrediction + "% " + this.predictionMode)
+    resultAnalysis.push(x)
+    resultAnalysis[3] = "***"
+    resultAnalysis[4] = "Analysis of the results based on the average of patients medical profile:"
+    resultAnalysis.push("Based on your average records you are within " + riskGroupBasedOnAverageRecord + " with " + averagePrediction + "% " + this.predictionMode)
+    resultAnalysis.push(y)
+
+    return resultAnalysis
+
+  }
+
+  private simulatePredictionByRelaxingRiskFactors(age, isDiabetic, isTreatedForHypertension, haveHypertension, recentRecord, isSmoking, isMale, didExperienceCardiovascularDisease) {
     const cholesterol = recentRecord.totalCholesterol
     const hdl = recentRecord.hdlCholesterol
     const sbp = recentRecord.systolicBloodPressure
 
-    if (flag) {
+    if (didExperienceCardiovascularDisease) {
       const predictionBasedOnRelaxdFactors = {
         relaxedSmoking: (isSmoking) ? this.predictRecurrentCoronaryHearDiseaseRisk(age, recentRecord.totalCholesterol, recentRecord.hdlCholesterol, recentRecord.systolicBloodPressure, isDiabetic, false, isMale) : undefined,
         relaxedBloodPressure: (sbp >= 140) ? this.predictRecurrentCoronaryHearDiseaseRisk(age, recentRecord.totalCholesterol, recentRecord.hdlCholesterol, 120, isDiabetic, isSmoking, isMale) : undefined,
@@ -106,7 +170,7 @@ export class PredictionProvider {
         relaxedBloodPressure: (sbp >= 140) ? this.predictHardCoronaryHeartDiseaseRisk(age, recentRecord.totalCholesterol, recentRecord.hdlCholesterol, 120, isTreatedForHypertension, isSmoking, isMale) : undefined,
         relaxedCholesterol: (cholesterol >= 200) ? this.predictHardCoronaryHeartDiseaseRisk(age, recentRecord.totalCholesterol, 190, recentRecord.systolicBloodPressure, isTreatedForHypertension, isSmoking, isMale) : undefined,
       }
-       return predictionBasedOnRelaxdFactors
+      return predictionBasedOnRelaxdFactors
     }
 
 

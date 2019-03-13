@@ -38,7 +38,7 @@ export class HomePage {
   ionViewWillEnter(){
     this.firebaseProvider.getPatientsRecentProfile(this.navParams.data, 1).then(data => {
       this.calculatePatientsBMI(data[Object.keys(data)[0]].weight)
-    })
+    }).catch(error => console.log(error))
   }
 
   private retrievePatientData() {
