@@ -49,27 +49,60 @@
         </ion-card-content>
       </ion-card>
     </div>
+
     <div *ngSwitchCase="'patients'">
-      <ion-card *ngFor="let patient of listOfPatients">
-        <ion-card-header>{{patient.payload.val().name}}</ion-card-header>
-        <ion-card-content>
-          <ion-item>
-            <ion-label item-start>Date Of Birth</ion-label>
-            <p item-end>{{patient.payload.val().dateOfBirth}}</p>
-          </ion-item>
-          <ion-item>
-            <ion-label item-start>Email</ion-label>
-            <p item-end>{{patient.payload.val().email}}</p>
-          </ion-item>
+      <br>
+      <ion-item>
+        <ion-label>View: </ion-label>
+        <ion-select class= "myCustomSelect" [(ngModel)]="viewSortedPatientsBasedOnRisk" (ionChange)="sortListOfPatients()" interface="popover">
+          <ion-option [value]="false">All Patients</ion-option>
+          <ion-option [value]="true">Patient Sorted Based On Risk</ion-option>
+        </ion-select>
+      </ion-item>
 
-           <ion-item>
-            <button ion-button full (click)="viewPatient(patient.payload)">View</button>
-          </ion-item>
+      <div *ngIf="!viewSortedPatientsBasedOnRisk">
+        <ion-card *ngFor="let patient of listOfPatients">
+          <ion-card-header>{{patient.payload.val().name}}</ion-card-header>
+          <ion-card-content>
+            <ion-item>
+              <ion-label item-start>Date Of Birth</ion-label>
+              <p item-end>{{patient.payload.val().dateOfBirth}}</p>
+            </ion-item>
+            <ion-item>
+              <ion-label item-start>Email</ion-label>
+              <p item-end>{{patient.payload.val().email}}</p>
+            </ion-item>
 
-        </ion-card-content>
-      </ion-card>
+            <ion-item>
+              <button ion-button full (click)="viewPatient(patient.payload)">View</button>
+            </ion-item>
+
+          </ion-card-content>
+        </ion-card>
+      </div>
+
+      
+      <div *ngIf="viewSortedPatientsBasedOnRisk">
+        <ion-card *ngFor="let patient of sortedListOfPatients">
+          <ion-card-header>{{patient.payload.val().name}}</ion-card-header>
+          <ion-card-content>
+            <ion-item>
+              <ion-label item-start>Date Of Birth</ion-label>
+              <p item-end>{{patient.payload.val().dateOfBirth}}</p>
+            </ion-item>
+            <ion-item>
+              <ion-label item-start>Email</ion-label>
+              <p item-end>{{patient.payload.val().email}}</p>
+            </ion-item>
+
+            <ion-item>
+              <button ion-button full (click)="viewPatient(patient.payload)">View</button>
+            </ion-item>
+
+          </ion-card-content>
+        </ion-card>
+      </div>
+
     </div>
-
   </div>
-
 </ion-content>

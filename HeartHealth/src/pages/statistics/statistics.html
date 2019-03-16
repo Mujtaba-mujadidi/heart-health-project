@@ -14,9 +14,9 @@
 
 <ion-content padding>
   <ion-card>
-    <ion-card-header>
-      test
-    </ion-card-header>
+    <!--<ion-card-header>
+      Risk Factor
+    </ion-card-header>-->
     <ion-item>
       <ion-label>Risk Factor: </ion-label>
       <ion-select [(ngModel)]="riskFactor" (ionChange)="updateChart()" interface="popover">
@@ -63,7 +63,7 @@
       Analysis
     </ion-card-header>
     <ion-card-content>
-      <ion-list *ngFor="let str of recentAnalysis">
+      <ion-list *ngFor="let str of resultsAnalysis">
         <ion-item no-lines>
           <p text-wrap>{{str}}</p>
         </ion-item>

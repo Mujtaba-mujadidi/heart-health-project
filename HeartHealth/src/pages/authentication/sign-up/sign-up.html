@@ -21,7 +21,7 @@
       <ion-option value="doctor">Doctor</ion-option>
     </ion-select>
   </ion-item>
-<!--
+  <!--
   <ion-item *ngIf="userType != '' && userType == 'patient'">
     <ion-label> Select your doctor: </ion-label>
     <ion-select [(ngModel)]="potentialPatientDoctorKey" interface="popover">
@@ -61,10 +61,26 @@
     </ion-item>
 
     <ion-item>
+      <ion-label>Height (feet): {{registrationFormPatient.value.height}}</ion-label>
+      <ion-range min="100" max="214"  formControlName="height" pin="true" color="secondary" (ionChange)="convertCmToFeet()">
+        <ion-label range-left>Min</ion-label>
+        <ion-label range-right>Max</ion-label>
+      </ion-range>
+    </ion-item>
+    
+    <ion-item>
+      <ion-label text-wrap> Have you experience a cardiovascular event before: </ion-label>
+      <ion-select formControlName="didExperienceCardiovascularDisease" interface="popover">
+        <ion-option [value]=t rue> Yes </ion-option>
+        <ion-option [value]=f alse> No </ion-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
       <ion-label> Do you have Diabetes: </ion-label>
       <ion-select formControlName="isDiabetic" interface="popover">
-        <ion-option [value]= true > Yes </ion-option>
-        <ion-option [value]= false > No </ion-option>
+        <ion-option [value]=t rue> Yes </ion-option>
+        <ion-option [value]=f alse> No </ion-option>
       </ion-select>
     </ion-item>
 
@@ -75,8 +91,8 @@
     <ion-item>
       <ion-label> Do you have hypertension: </ion-label>
       <ion-select formControlName="haveHypertension" interface="popover">
-        <ion-option [value]= true > Yes </ion-option>
-        <ion-option [value]= false > No </ion-option>
+        <ion-option [value]=t rue> Yes </ion-option>
+        <ion-option [value]=f alse> No </ion-option>
       </ion-select>
     </ion-item>
 
@@ -84,11 +100,11 @@
       <p class="invalid_input">Please select if you have hypertension.</p>
     </ion-item>
 
-     <ion-item *ngIf = "registrationFormPatient.value.haveHypertension && registrationFormPatient.value.haveHypertension == true">
+    <ion-item *ngIf="registrationFormPatient.value.haveHypertension && registrationFormPatient.value.haveHypertension == true">
       <ion-label text-wrap>Are you being treated for hypertension: </ion-label>
       <ion-select formControlName="isTreatedForHypertension" interface="popover">
-        <ion-option [value]= true > Yes </ion-option>
-        <ion-option [value]= false > No </ion-option>
+        <ion-option [value]=t rue> Yes </ion-option>
+        <ion-option [value]=f alse> No </ion-option>
       </ion-select>
     </ion-item>
 
@@ -96,11 +112,11 @@
       <p class="invalid_input">Please select if you are being treated for hypertension.</p>
     </ion-item>
 
-    <ion-item >
+    <ion-item>
       <ion-label>Do you smoke: </ion-label>
       <ion-select formControlName="isSmoking" interface="popover">
-        <ion-option [value]= true > Yes </ion-option>
-        <ion-option [value]= false > No </ion-option>
+        <ion-option [value]=t rue> Yes </ion-option>
+        <ion-option [value]=f alse> No </ion-option>
       </ion-select>
     </ion-item>
 
@@ -184,7 +200,8 @@
   </form>
 
 
-  <button ion-button full id="signUp-btn" [disabled] = "userType == '' || userType == 'patient' && !registrationFormPatient.valid || userType == 'doctor' && !registrationForm.valid" (click)="signUp()">Register</button>
+  <button ion-button full id="signUp-btn" [disabled]="userType == '' || userType == 'patient' && !registrationFormPatient.valid || userType == 'doctor' && !registrationForm.valid"
+    (click)="signUp()">Register</button>
 
 
 

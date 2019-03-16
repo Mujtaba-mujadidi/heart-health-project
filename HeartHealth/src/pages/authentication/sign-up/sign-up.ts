@@ -42,9 +42,6 @@ export class SignUpPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad SignupPage');
     this.listOfDoctors = this.firebaseProvider.getObservables("doctors")
-    // subscribe(data => {
-    //   this.listOfDoctors = data
-    // });
   }
 
   private buildRegistrationForm() {
@@ -62,8 +59,10 @@ export class SignUpPage {
       address: ['', Validators.required],
       doctorKey: ['', Validators.required],
       isDiabetic: [Validators.required],
+      didExperienceCardiovascularDisease: [Validators.required],
       isSmoking: [Validators.required],
       haveHypertension: [Validators.required],
+      height: [0.00, Validators.required],
       isTreatedForHypertension: [false, Validators.required],
       email: ['', Validators.compose([Validators.pattern(this.emailRegex), Validators.required])],
       password: ['', Validators.required]
@@ -93,6 +92,14 @@ export class SignUpPage {
         this.firebaseProvider.setObjectToFirebaseListWithTheGivenID("userType", { type: "doctor" })
       }).catch((error) => console.log(error))
     }
+  }
+
+  /**
+   * TO Convert measurement from Metric to Imperial units
+   */
+  private convertCmToFeet(){
+    const height =  parseFloat((this.registrationFormPatient.value.height * 0.0328084).toFixed(2))
+    this.registrationFormPatient.value.height =  (height > 7.00)? 7.00 : height 
   }
 
 }

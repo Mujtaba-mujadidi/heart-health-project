@@ -27,7 +27,7 @@ export class StatisticsPage {
   riskFactor = "Blood Pressure"
   patientHealthProfileLength = "0"  //Length of time the patient health profile is required to be retrieved!
 
-  recentAnalysis = []
+  resultsAnalysis = []
   chartTitle = ""
   healthProfileChartLabel = []
 
@@ -158,12 +158,12 @@ export class StatisticsPage {
   private updateChart() {
     if (this.barChart !== undefined) { this.barChart.chart.destroy(); } //To avoid placing the chart on top of the previous chart
 
-    this.recentAnalysis = []
+    this.resultsAnalysis = []
 
     switch (this.riskFactor) {
       case "Blood Pressure": {
         this.initBarChart(this.statisticsProvider.systolicBpData, this.healthProfileChartLabel, "Blood Pressure (mm Hg)")
-        this.recentAnalysis = this.statisticsProvider.getAnalyses(this.riskFactor)
+        this.resultsAnalysis = this.statisticsProvider.getAnalyses(this.riskFactor)
         console.log("View Blood Pressure")
         //this.initLineChart(this.statisticsProvider.systolicBpData, this.healthProfileChartLabel, "Blood Pressure (mm Hg)")
         break;
@@ -171,7 +171,7 @@ export class StatisticsPage {
 
       case "Heart Rate": {
         this.initBarChart(this.statisticsProvider.heartRateData, this.healthProfileChartLabel, "Heart Rate (BPM)")
-        this.recentAnalysis = this.statisticsProvider.getAnalyses(this.riskFactor)
+        this.resultsAnalysis = this.statisticsProvider.getAnalyses(this.riskFactor)
         break;
       }
 

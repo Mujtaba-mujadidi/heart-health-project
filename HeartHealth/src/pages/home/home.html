@@ -18,23 +18,38 @@
         <ion-label text-wrap><b>Data Of Birth:</b></ion-label>
         <ion-label text-wrap item-end>{{patientDetails.dateOfBirth}}</ion-label>
       </ion-item>
-       <ion-item>
+      <ion-item>
         <ion-label text-wrap><b>Email:</b></ion-label>
         <ion-label text-wrap item-end>{{patientDetails.email}}</ion-label>
+      </ion-item>
+      <ion-item *ngIf="patientDetails.didExperienceCardiovascularDisease">
+        <ion-label text-wrap><b>Has patient experienced a cardiovascular event:</b></ion-label>
+        <ion-label text-wrap item-end>Yes</ion-label>
+      </ion-item>
+      <ion-item *ngIf="!patientDetails.didExperienceCardiovascularDisease">
+        <ion-label text-wrap><b>Has patient experienced a cardiovascular event:</b></ion-label>
+        <ion-label text-wrap item-end>No</ion-label>
       </ion-item>
     </ion-card-content>
   </ion-card>
 
-  <ion-card>
+  <ion-card *ngIf="patientBMI != 0">
     <ion-card-header>
       BMI
     </ion-card-header>
     <ion-card-content>
-      <progress-bar  [progress]="20"></progress-bar>
+      <ion-item>
+        <progress-bar [progress]="patientBMI"></progress-bar>
+      </ion-item>
+
+      <ion-item>
+        <ion-label text-wrap><b>Wight Group:</b></ion-label>
+        <ion-label text-wrap item-end>{{weightGroup}}</ion-label>
+      </ion-item>
     </ion-card-content>
   </ion-card>
-  
-  <ion-card *ngIf = "!isDoctor">
+
+  <ion-card *ngIf="!isDoctor">
     <ion-card-header>Please fill all the fields</ion-card-header>
     <ion-card-content>
       <form [formGroup]="form">
@@ -123,8 +138,5 @@
 
     </ion-card-content>
   </ion-card>
-
-
-
 
 </ion-content>
