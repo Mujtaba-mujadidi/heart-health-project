@@ -53,7 +53,6 @@ export class PredictionPage {
   predict() {
     this.predictionProvider.predict(this.navParams.data).then((object: any) => {
       this.predictionObject = object
-      console.log(object)
       this.showPrediction = true;
       this.resultAnalysis = object.resultAnalysis
       this.simulatedResultsAnalysis = object.simulatedPrediction.resultAnalysis

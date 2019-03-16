@@ -74,7 +74,7 @@ export class PredictionProvider {
             const predictionObject = {
               recentPrediction: recentPrediction,
               averagePrediction: averagePrediction,
-              resultAnalysis: (patientId) ? undefined : this.analysePredictionResults(recentPrediction, averagePrediction),
+              resultAnalysis: this.analysePredictionResults(recentPrediction, averagePrediction),
               simulatedPrediction: {
                 results: simulatedPredictionResults,
                 resultAnalysis: this.analyseSimulatedPredictionResults(simulatedPredictionResults, recentPrediction)
