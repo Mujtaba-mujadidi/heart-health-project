@@ -61,4 +61,8 @@ export class AuthenticationProvider {
     return this.firebaseProvider.removeObjectFromGivenNodeReference("potentialPatients", patient.key)
   }
 
+  public logout(){
+    return this.firebaseProvider.logout()
+  }
+
 }

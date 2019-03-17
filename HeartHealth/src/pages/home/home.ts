@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, App } from 'ionic-angular';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { FirebaseProvider } from "../../providers/firebase/firebase";
 import { AuthenticationProvider } from "../../providers/authentication/authentication";
 import { User } from "../../models/user.model";
+import { DoctorMainPage } from "../doctor-main/doctor-main";
+import { LoginPage } from "../authentication/login/login";
 
 
 @Component({
@@ -22,6 +24,7 @@ export class HomePage {
   constructor(
     public navCtrl: NavController,
     private navParams: NavParams,
+    private application: App,
     private formBuilder: FormBuilder,
     private authenticationProvider: AuthenticationProvider,
     private firebaseProvider: FirebaseProvider,
@@ -86,6 +89,22 @@ export class HomePage {
 
   analyzeData() {
 
+  }
+
+  /**
+   * To return to Doctors main page from.
+   */
+  private goBackToDoctorMainPage(){
+    this.application.getRootNavs()[0].setRoot(DoctorMainPage)
+  }
+
+  /**
+   * To logout user from the app
+   */
+  private logout(){
+    this.authenticationProvider.logout().then(()=>{
+      this.application.getRootNavs()[0].setRoot(LoginPage)
+    });
   }
 
 }

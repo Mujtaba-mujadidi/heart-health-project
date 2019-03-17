@@ -8,6 +8,12 @@
 
   <ion-navbar>
     <ion-title>doctorMain</ion-title>
+
+    <ion-buttons right>
+      <button ion-button color="danger" icon-only (click)="logout()">
+          <ion-icon item-end name="log-out"></ion-icon>
+        </button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
@@ -54,7 +60,7 @@
       <br>
       <ion-item>
         <ion-label>View: </ion-label>
-        <ion-select class= "myCustomSelect" [(ngModel)]="viewSortedPatientsBasedOnRisk" (ionChange)="sortListOfPatients()" interface="popover">
+        <ion-select class="myCustomSelect" [(ngModel)]="viewSortedPatientsBasedOnRisk" (ionChange)="sortListOfPatients()" interface="popover">
           <ion-option [value]="false">All Patients</ion-option>
           <ion-option [value]="true">Patient Sorted Based On Risk</ion-option>
         </ion-select>
@@ -81,7 +87,7 @@
         </ion-card>
       </div>
 
-      
+
       <div *ngIf="viewSortedPatientsBasedOnRisk">
         <ion-card *ngFor="let patient of sortedListOfPatients">
           <ion-card-header>{{patient.payload.val().name}}</ion-card-header>

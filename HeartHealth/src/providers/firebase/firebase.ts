@@ -144,4 +144,8 @@ export class FirebaseProvider {
 
   }
 
+  public logout(){
+    return this.firebaseAuthor.signOut()
+  }
+
 }

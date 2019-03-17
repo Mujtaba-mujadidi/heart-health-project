@@ -7,13 +7,6 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import { FirebaseProvider } from "../firebase/firebase";
 
-/*
-  Generated class for the PredictionProvider provider.
-
-  See https://angular.io/guide/dependency-injection for more info on providers
-  and Angular DI.
-*/
-
 @Injectable()
 export class PredictionProvider {
 
@@ -22,7 +15,6 @@ export class PredictionProvider {
 
   constructor(
     private firebaseProvider: FirebaseProvider
-
   ) {
     console.log('Hello PredictionProvider Provider');
   }
