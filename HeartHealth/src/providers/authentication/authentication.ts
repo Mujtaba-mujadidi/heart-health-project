@@ -61,4 +61,16 @@ export class AuthenticationProvider {
     return this.firebaseProvider.removeObjectFromGivenNodeReference("potentialPatients", patient.key)
   }
 
+  public logout(){
+    return this.firebaseProvider.logout()
+  }
+
+  /**
+   * To send a reset password link to the corresponding email.
+   * @param email 
+   */
+  public resetPassword(email){
+   return this.firebaseProvider.resetPassword(email)
+  }
+
 }

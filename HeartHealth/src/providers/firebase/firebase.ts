@@ -144,4 +144,16 @@ export class FirebaseProvider {
 
   }
 
+  public logout(){
+    return this.firebaseAuthor.signOut()
+  }
+
+  /**
+   * To send a reset password link to the corresponding email.
+   * @param email 
+   */
+  public resetPassword(email){
+    return this.firebaseAuthor.sendPasswordResetEmail(email)
+  }
+
 }

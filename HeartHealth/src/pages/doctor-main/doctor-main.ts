@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, App } from 'ionic-angular';
 import { Observable } from "rxjs";
 import { FirebaseProvider } from "../../providers/firebase/firebase";
 import { AuthenticationProvider } from "../../providers/authentication/authentication";
 import { TabsPage } from "../tabs/tabs";
 import { PredictionProvider } from "../../providers/prediction/prediction";
+import { LoginPage } from "../authentication/login/login";
 
 /**
  * Generated class for the DoctorMainPage page.
@@ -33,6 +34,7 @@ export class DoctorMainPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    private application: App,
     private firebaseProvider: FirebaseProvider,
     private predictionProvider: PredictionProvider,
     private authenticationProvider: AuthenticationProvider
@@ -45,7 +47,10 @@ export class DoctorMainPage {
     this.getListOfPatients()
   }
 
-  getListOfPatients() {
+  /**
+   * To retrieve list of patients and potential patients registered with this Doctor
+   */
+  private getListOfPatients() {
     this.firebaseProvider.getObservablesByMatch("potentialPatients", "doctorKey").subscribe(data => {
       this.listOfPotentialPatients = data
     })
@@ -53,6 +58,7 @@ export class DoctorMainPage {
       this.listOfPatients = data
       this.sortedListOfPatients = []
       this.isListSorted = false
+      /**FOr each patient calculate their risk and add it as a property */
       data.forEach((patient: any) => {
         this.predictionProvider.predict(patient.key).then((object: any) => {
           patient.risk = object.recentPrediction
@@ -62,23 +68,43 @@ export class DoctorMainPage {
     })
   }
 
-  approveRegistration(patient) {
+  /**
+   * To approve the registration of the potential patient
+   * @param patient 
+   */
+  private approveRegistration(patient) {
     this.authenticationProvider.approvePatientRegistration(patient);
   }
 
-  rejectRegistration(patient) {
+  /**
+   * To reject registration of the potential patient
+   * @param patient 
+   */
+  private rejectRegistration(patient) {
     this.authenticationProvider.rejectPatientRegistration(patient)
   }
 
-  sortListOfPatients() {
+  /**
+   * To sort list of patients in decreasing order of risk score
+   */
+  private sortListOfPatients() {
     if (!this.isListSorted) {
       this.sortedListOfPatients.sort((a, b) => a.risk > b.risk ? -1 : a.risk < b.risk ? 1 : 0)
       this.isListSorted = true
     }
   }
 
-  viewPatient(patient) {
+  private viewPatient(patient) {
     this.navCtrl.push(TabsPage, patient.key)
+  }
+
+  /**
+   * To logout user from the app
+   */
+  private logout() {
+    this.authenticationProvider.logout().then(() => {
+      this.application.getRootNavs()[0].setRoot(LoginPage)
+    });
   }
 
 }

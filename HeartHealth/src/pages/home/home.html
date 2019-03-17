@@ -1,6 +1,17 @@
 <ion-header>
   <ion-navbar>
     <ion-title>Home</ion-title>
+    <ion-buttons *ngIf="isDoctor" left>
+      <button ion-button icon-only (click)="goBackToDoctorMainPage()">
+        <ion-icon name="arrow-back"></ion-icon> Back
+        </button>
+    </ion-buttons>
+
+    <ion-buttons right>
+      <button ion-button color="danger" icon-only (click)="logout()">
+          <ion-icon item-end name="log-out"></ion-icon>
+        </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
