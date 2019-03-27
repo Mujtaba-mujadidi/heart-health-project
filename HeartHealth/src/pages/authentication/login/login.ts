@@ -28,7 +28,6 @@ export class LoginPage {
     private alertController: AlertController,
     private toastController: ToastController,
     private authenticationProvider: AuthenticationProvider
-
   ) {
   }
 
@@ -36,11 +35,17 @@ export class LoginPage {
     console.log('ionViewDidLoad LoginPage');
   }
 
-  goToSignUp() {
+  /**
+   * @description: to navigate to registration page
+   */
+  private goToSignUp() {
     this.navCtrl.push(SignUpPage)
   }
 
-  signIn() {
+  /**
+   * @description: To sign in to the app
+   */
+  private signIn() {
     this.authenticationProvider.signIn(this.email, this.password).then(object => {
       if (object.type == "doctor") {
         this.navCtrl.setRoot(DoctorMainPage)
@@ -54,7 +59,7 @@ export class LoginPage {
 
 
   /**
-   * To request a password rest link
+   * @description: To request a password rest link
    */
   private resetPassword() {
 

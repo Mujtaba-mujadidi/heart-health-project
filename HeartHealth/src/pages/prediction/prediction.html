@@ -15,25 +15,6 @@
 
 <ion-content padding>
 
-
-  <ion-card>
-    <!--<ion-item>
-      <ion-label text-wrap> Please select yes if you have experienced cardiovascular disease before: </ion-label>
-      <ion-select [(ngModel)]="experiencedCHD" interface="popover">
-        <ion-option [value]=true> Yes </ion-option>
-        <ion-option [value]=false> No </ion-option>
-      </ion-select>
-
-      [disabled]="experiencedCHD == undefined"
-
-    </ion-item>-->
-
-    <!--<ion-item>
-      <button ion-button full (click)="predict()">Predict</button>
-    </ion-item>-->
-
-  </ion-card>
-
   <div *ngIf="showPrediction">
     <ion-card [ngStyle]="{'border-left': recentCardStyle}">
       <ion-card-header text-wrap>

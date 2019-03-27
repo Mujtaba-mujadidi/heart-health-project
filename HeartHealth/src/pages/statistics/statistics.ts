@@ -24,12 +24,12 @@ export class StatisticsPage {
   // @ViewChild('lineCanvas') lineCanvas
   // lineChart: any
 
-  riskFactor = "Blood Pressure"
-  patientHealthProfileLength = "0"  //Length of time the patient health profile is required to be retrieved!
+  private riskFactor = "Blood Pressure" //Blood pressure is selected by the default.
+  private patientHealthProfileLength = "0"  //Length of time the patient health profile is required to be retrieved!
 
-  resultsAnalysis = []
-  chartTitle = ""
-  healthProfileChartLabel = []
+  private resultsAnalysis = [] //Analysis of the results of the selected risk factor.
+  private chartTitle = "" 
+  private healthProfileChartLabel = []
 
   constructor(
     public navCtrl: NavController,
@@ -45,7 +45,12 @@ export class StatisticsPage {
     this.retrievePatientHealthProfile()
   }
 
-  retrievePatientHealthProfile(patientHealthProfileLength?, startDate?) {
+  /**
+   * @description: To retrieve patients health profile for the optional specified length of time and an optional start date.
+   * @param patientHealthProfileLength : Restricts the data retrieval to the specified length.
+   * @param startDate : Restricts the data retrieval from this date.
+   */
+  private retrievePatientHealthProfile(patientHealthProfileLength?, startDate?) {
     this.statisticsProvider.getPatientsHealthProfile(this.navParams.data, patientHealthProfileLength, startDate).then(() => {
       this.healthProfileChartLabel = this.statisticsProvider.getChartLabelForPatientsHealthProfile();
       this.updateChart()

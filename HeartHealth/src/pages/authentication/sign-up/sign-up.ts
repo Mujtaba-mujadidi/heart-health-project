@@ -20,15 +20,12 @@ import { Observable } from 'rxjs/Observable';
 })
 export class SignUpPage {
 
-  private emailRegex = /(.)+@(\w)+\.(.)/;
-  public registrationForm: FormGroup;
-  private registrationFormPatient: FormGroup;
-  private userType = "";
-  private potentialPatientDoctorKey = {} as any
-  listOfDoctors: Observable<any[]>;
-
-  //[{ name: "a" }, { name: "b" }, { name: "c" }]
-
+  private emailRegex = /(.)+@(\w)+\.(.)/; //Validates email format
+  public registrationForm: FormGroup; //Registration form used for Doctors registration
+  private registrationFormPatient: FormGroup; //Registration form used for Patients registration.
+  private userType = ""; //Type of user registering to the app.
+  //private potentialPatientDoctorKey = {} as any //
+  listOfDoctors: Observable<any[]>; //List of doctors that the new patient can register with.
 
   constructor(
     public navCtrl: NavController,
@@ -44,6 +41,9 @@ export class SignUpPage {
     this.listOfDoctors = this.firebaseProvider.getObservables("doctors")
   }
 
+  /**
+   * @description: To initialise registration forms.
+   */
   private buildRegistrationForm() {
     this.registrationForm = this.formBuilder.group({
       name: ['', Validators.compose([Validators.maxLength(30), Validators.pattern('[a-zA-Z ]+ [a-zA-Z ]+'), Validators.required])],
@@ -69,7 +69,10 @@ export class SignUpPage {
     });
   }
 
-  signUp() {
+  /**
+   * @description: to sign up
+   */
+  private signUp() {
     const userDetails =  (this.userType == "patient")? this.registrationFormPatient.value : this.registrationForm.value
 
     this.authenticationProvider.signUp(userDetails.email, userDetails.password).then(() => {
@@ -77,9 +80,11 @@ export class SignUpPage {
     }).catch((error) => console.log(error))
   }
 
-
-  registerNewUser(userDetails) {
-    console.log(this.userType)
+  /**
+   * To store user detains in firebase database
+   * @param userDetails 
+   */
+  private registerNewUser(userDetails) {
     if (this.userType == "patient") {
       this.authenticationProvider.registerUser(this.userType, userDetails).then(() => {
         alert("Please await for your registration to be approved by your doctor")
@@ -95,7 +100,7 @@ export class SignUpPage {
   }
 
   /**
-   * TO Convert measurement from Metric to Imperial units
+   *@description: To Convert measurement from Metric to Imperial units
    */
   private convertCmToFeet(){
     const height =  parseFloat((this.registrationFormPatient.value.height * 0.0328084).toFixed(2))

@@ -37,7 +37,7 @@ export class StatisticsProvider {
     minDate = (minDate)? this.formatDate(minDate) : minDate
     return new Promise(async (resolve, reject) => {
       await this.resetData()
-      this.firebaseProvider.getPatientsRecentProfile(id, length).then((data) => {
+      this.firebaseProvider.getPatientsProfile(id, length).then((data) => {
         Object.keys(data).forEach(key => {
           if (minDate && new Date(key) >= new Date(minDate) || !minDate) {
             const label = this.formatDate(key)

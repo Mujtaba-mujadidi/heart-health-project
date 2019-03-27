@@ -21,15 +21,14 @@ import { LoginPage } from "../authentication/login/login";
 })
 export class DoctorMainPage {
 
-  doctorMainPageSegment: string = "patients";
+  doctorMainPageSegment: string = "patients"; //To active the patients tab by default
 
-  listOfPatients: Observable<any[]>
-  listOfPotentialPatients: Observable<any[]> = {} as any
+  listOfPatients: Observable<any[]> //List of patients registered with the doctor
+  listOfPotentialPatients: Observable<any[]> = {} as any //List of potential patients registered with the doctor
 
   viewSortedPatientsBasedOnRisk = false //Used to hide and show different lists based on user selection
-  isListSorted = false;
-
-  sortedListOfPatients = []
+  isListSorted = false; //to avoid sorting a list multiple times
+  sortedListOfPatients = [] //List of patients sorted in decreasing risk of developing heart disease.
 
   constructor(
     public navCtrl: NavController,
@@ -48,7 +47,7 @@ export class DoctorMainPage {
   }
 
   /**
-   * To retrieve list of patients and potential patients registered with this Doctor
+   * @description: To retrieve list of patients and potential patients registered with this Doctor
    */
   private getListOfPatients() {
     this.firebaseProvider.getObservablesByMatch("potentialPatients", "doctorKey").subscribe(data => {
@@ -58,7 +57,7 @@ export class DoctorMainPage {
       this.listOfPatients = data
       this.sortedListOfPatients = []
       this.isListSorted = false
-      /**FOr each patient calculate their risk and add it as a property */
+      /**For each patient calculate their risk and add it as a property*/
       data.forEach((patient: any) => {
         this.predictionProvider.predict(patient.key).then((object: any) => {
           patient.risk = object.recentPrediction
@@ -69,7 +68,7 @@ export class DoctorMainPage {
   }
 
   /**
-   * To approve the registration of the potential patient
+   * @description: To approve the registration of the potential patient
    * @param patient 
    */
   private approveRegistration(patient) {
@@ -77,7 +76,7 @@ export class DoctorMainPage {
   }
 
   /**
-   * To reject registration of the potential patient
+   * @description: To reject registration of the potential patient
    * @param patient 
    */
   private rejectRegistration(patient) {
@@ -85,21 +84,25 @@ export class DoctorMainPage {
   }
 
   /**
-   * To sort list of patients in decreasing order of risk score
+   * @description: To sort list of patients in decreasing order of risk score
    */
   private sortListOfPatients() {
     if (!this.isListSorted) {
       this.sortedListOfPatients.sort((a, b) => a.risk > b.risk ? -1 : a.risk < b.risk ? 1 : 0)
-      this.isListSorted = true
+      this.isListSorted = true //once list is sorted, set this to true to avoid resorting the list.
     }
   }
 
+  /**
+   * @description: To view patient profile with the matching key.
+   * @param patient 
+   */
   private viewPatient(patient) {
     this.navCtrl.push(TabsPage, patient.key)
   }
 
   /**
-   * To logout user from the app
+   *@description: To logout user from the app
    */
   private logout() {
     this.authenticationProvider.logout().then(() => {
