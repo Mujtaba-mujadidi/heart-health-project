@@ -21,14 +21,14 @@ export class StatisticsPage {
   @ViewChild('barCanvas') barCanvas
   barChart: any;
 
-  // @ViewChild('lineCanvas') lineCanvas
-  // lineChart: any
+  @ViewChild('lineCanvas') lineCanvas
+  lineChart: any
 
   private riskFactor = "Blood Pressure" //Blood pressure is selected by the default.
   private patientHealthProfileLength = "0"  //Length of time the patient health profile is required to be retrieved!
 
   private resultsAnalysis = [] //Analysis of the results of the selected risk factor.
-  private chartTitle = "" 
+  private chartTitle = ""
   private healthProfileChartLabel = []
 
   constructor(
@@ -95,14 +95,14 @@ export class StatisticsPage {
    * @param labels 
    * @param title 
    */
-  private initBarChart(data, labels, title) {
+  private initBarChart(data, labels) {
     const len = data.length
     this.barChart = new Chart(this.barCanvas.nativeElement, {
       type: 'bar',
       data: {
         labels: labels,
         datasets: [{
-          label: title,
+          label: this.chartTitle,
           data: data,
           backgroundColor: Array(len).fill('rgba(255, 99, 132, 0.2)'),
           borderColor: Array(len).fill('rgba(255,99,132,1)'),
@@ -121,72 +121,80 @@ export class StatisticsPage {
     });
   }
 
-  // initLineChart(data, labels, title) {
-  //   this.lineChart = new Chart(this.lineCanvas.nativeElement, {
+  initLineChart(data, labels) {
+    const len = data.length
+    this.lineChart = new Chart(this.lineCanvas.nativeElement, {
 
-  //     type: 'line',
-  //     data: {
-  //       labels: labels,
-  //       datasets: [
-  //         {
-  //           label: "My First dataset",
-  //           fill: false,
-  //           lineTension: 0.1,
-  //           backgroundColor: "rgba(75,192,192,0.4)",
-  //           borderColor: "rgba(75,192,192,1)",
-  //           borderCapStyle: 'butt',
-  //           borderDash: [],
-  //           borderDashOffset: 0.0,
-  //           borderJoinStyle: 'miter',
-  //           pointBorderColor: "rgba(75,192,192,1)",
-  //           pointBackgroundColor: "#fff",
-  //           pointBorderWidth: 1,
-  //           pointHoverRadius: 5,
-  //           pointHoverBackgroundColor: "rgba(75,192,192,1)",
-  //           pointHoverBorderColor: "rgba(220,220,220,1)",
-  //           pointHoverBorderWidth: 2,
-  //           pointRadius: 1,
-  //           pointHitRadius: 10,
-  //           data: data,
-  //           spanGaps: false,
-  //         }
-  //       ]
-  //     }
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: this.chartTitle,
+            fill: false,
+            lineTension: 0.1,
+            backgroundColor: "rgba(255, 99, 132, 0.2)",
+            borderColor: "rgba(255,99,132,1)",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "rgba(75,192,192,1)",
+            pointBackgroundColor: "#fff",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            data: data,
+            spanGaps: false,
+          }
+        ]
+      }
 
-  //   });
+    });
 
-  // }
+  }
 
   /**
    * Update chart to visualise patients records for the selected risk factor
    */
   private updateChart() {
     if (this.barChart !== undefined) { this.barChart.chart.destroy(); } //To avoid placing the chart on top of the previous chart
+    if (this.lineChart !== undefined) { this.lineChart.chart.destroy(); } //To avoid placing the chart on top of the previous chart
 
     this.resultsAnalysis = []
 
     switch (this.riskFactor) {
       case "Blood Pressure": {
-        this.initBarChart(this.statisticsProvider.systolicBpData, this.healthProfileChartLabel, "Blood Pressure (mm Hg)")
+        this.chartTitle = "Blood Pressure (mm Hg)";
+        this.initBarChart(this.statisticsProvider.systolicBpData, this.healthProfileChartLabel)
+        this.initLineChart(this.statisticsProvider.systolicBpData, this.healthProfileChartLabel)
         this.resultsAnalysis = this.statisticsProvider.getAnalyses(this.riskFactor)
-        console.log("View Blood Pressure")
-        //this.initLineChart(this.statisticsProvider.systolicBpData, this.healthProfileChartLabel, "Blood Pressure (mm Hg)")
         break;
       }
 
       case "Heart Rate": {
-        this.initBarChart(this.statisticsProvider.heartRateData, this.healthProfileChartLabel, "Heart Rate (BPM)")
+        this.chartTitle = "Heart Rate (BPM)";
+        this.initBarChart(this.statisticsProvider.heartRateData, this.healthProfileChartLabel)
+        this.lineChart(this.statisticsProvider.heartRateData, this.healthProfileChartLabel)
         this.resultsAnalysis = this.statisticsProvider.getAnalyses(this.riskFactor)
         break;
       }
 
       case "Fitness": {
-        this.initBarChart(this.statisticsProvider.fitnessData, this.healthProfileChartLabel, "Fitness level")
+        this.chartTitle = "Fitness level";
+        this.initBarChart(this.statisticsProvider.fitnessData, this.healthProfileChartLabel)
+        this.initLineChart(this.statisticsProvider.fitnessData, this.healthProfileChartLabel)
         break;
       }
 
       case "Weight": {
-        this.initBarChart(this.statisticsProvider.weightData, this.healthProfileChartLabel, "Weight (Kgs)")
+        this.chartTitle = "Weight (Kgs)";
+        this.initBarChart(this.statisticsProvider.weightData, this.healthProfileChartLabel)
+        this.lineChart(this.statisticsProvider.fitnessData, this.healthProfileChartLabel)
         break;
       }
     }
