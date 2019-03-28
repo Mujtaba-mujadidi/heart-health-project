@@ -6,16 +6,14 @@ import { Observable } from 'rxjs/Observable';
 
 
 /*
-  Generated class for the FirebaseProvider provider.
-
-  See https://angular.io/guide/dependency-injection for more info on providers
-  and Angular DI.
+  All connections are made through this class with the Firebase Database.
 */
+
 @Injectable()
 export class FirebaseProvider {
 
   public firebaseAuthor: any; /*Author of the firebase*/
-  public loggedInUserUID = ""
+  public loggedInUserUID = "" //UID of the user currently logged in
 
 
   constructor(
@@ -49,9 +47,8 @@ export class FirebaseProvider {
     * @param object: object to be inserted into nodeReference. 
     * @param id: unique key of the object in nodeReference, when undefined, it is set to UID of logged in user. 
     */
-  public async addObjectToFirebaseListWithTheGivenID(nodeRef, object, id?) {
-    console.log(nodeRef)
-    const objectId = (id) ? id : this.firebaseAuthor.currentUser.uid;
+  public addObjectToFirebaseListWithTheGivenID(nodeRef, object, id?) {
+    const objectId = (id) ? id : this.firebaseAuthor.currentUser.uid; //if ID is not provided, use the ID of logged in user
     return firebase.database().ref().child(nodeRef).child(objectId).push(object);
   }
 
@@ -76,7 +73,6 @@ export class FirebaseProvider {
   }
 
 
-
   /**
    * @description To retrieve an object from nodeReference with the matching id (optional)
    * @param nodeReference: node reference from which object is retrieved. 
@@ -97,7 +93,12 @@ export class FirebaseProvider {
     })
   }
 
-  getPatientsRecentProfile(id?, length?): Promise<any> {
+  /**
+   * @description: To retrieve profile of patient with the matching id (optional) for the give length of time
+   * @param id 
+   * @param length 
+   */
+  getPatientsProfile(id?, length?): Promise<any> {
     const childId = (id) ? id : this.loggedInUserUID
     length = (length)? length: 5
     return new Promise((resolve, reject) => {
@@ -111,6 +112,9 @@ export class FirebaseProvider {
     })
   }
 
+  /**
+   * @description: To get the UID of logged in user.
+   */
   public getCurrentUserUid() {
     return this.loggedInUserUID
   }
@@ -126,13 +130,20 @@ export class FirebaseProvider {
 
 
   /**
-   * @description: Creates an account in firebase authentication with the supplied email, and password. 
+   * @description: Creates an account in firebase authentication with the given email and password. 
+   * @param email 
+   * @param password 
    */
   public signUp(email, password): Promise<any> {
     return this.firebaseAuthor.createUserWithEmailAndPassword(email, password);
   }
 
 
+  /**
+   * @description: To sign in with the given email and password.
+   * @param email 
+   * @param password 
+   */
   public signIn(email, password): Promise<any> {
     return new Promise((resolve, reject) => {
       this.firebaseAuthor.signInWithEmailAndPassword(email, password).then(() => {
@@ -144,12 +155,15 @@ export class FirebaseProvider {
 
   }
 
+  /**
+   * @description: To logout of the app.
+   */
   public logout(){
     return this.firebaseAuthor.signOut()
   }
 
   /**
-   * To send a reset password link to the corresponding email.
+   * @description: To send a reset password link to the given email.
    * @param email 
    */
   public resetPassword(email){

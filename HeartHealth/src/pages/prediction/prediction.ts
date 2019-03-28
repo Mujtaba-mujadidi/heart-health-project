@@ -3,12 +3,6 @@ import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angu
 import { PredictionProvider } from "../../providers/prediction/prediction";
 import { FirebaseProvider } from "../../providers/firebase/firebase";
 
-/**
- * Generated class for the PredictionPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({
@@ -18,22 +12,19 @@ import { FirebaseProvider } from "../../providers/firebase/firebase";
 export class PredictionPage {
 
 
-  // experiencedCHD
+  private showPrediction = false //To show and hide the prediction results
 
-  showPrediction = false
+  private recentCardStyle = "" //Used to dynamically set the card style for the prediction result based on the recent records.
+  // private recentPredictionAnalysis = ""
+  private averageCardStyle = "" //Used to dynamically set the card style for the prediction result based on the average records.
+  // private averagePredictionAnalysis = ""
 
-  cardStyle = "green solid 10px"
-  recentCardStyle = ""
-  recentPredictionAnalysis = ""
-  averageCardStyle = ""
-  averagePredictionAnalysis = ""
+  private resultAnalysis = [] //Analysis of the prediction result.
+  private simulatedResultsAnalysis = [] //Analysis of the the simulated prediction results.
 
-  resultAnalysis = []
-  simulatedResultsAnalysis = []
-
-  predictionObject: any = {} as any
-  riskGroupBasedOnRecentRecord = ""
-  riskGroupBasedOnAverageRecord = ""
+  private predictionObject: any = {} as any //Prediction object contains the result and analysis of the actual prediction and simulated prediction.
+  private riskGroupBasedOnRecentRecord = ""  
+  private riskGroupBasedOnAverageRecord = ""  
 
   constructor(
     public navCtrl: NavController,
@@ -50,7 +41,10 @@ export class PredictionPage {
   }
   
 
-  predict() {
+  /**
+   * @description: To predict the patient's risk of cardiovascular diseases.
+   */
+  private predict() {
     this.predictionProvider.predict(this.navParams.data).then((object: any) => {
       this.predictionObject = object
       this.showPrediction = true;
@@ -73,29 +67,13 @@ export class PredictionPage {
     })
   }
 
-  initCardStyle() {
+  /**
+   * @description: To set the CSS for the cards based on the results.
+   */
+  private initCardStyle() {
     this.riskGroupBasedOnRecentRecord = (this.predictionObject.recentPrediction <= 10) ? "Low Risk Group" : (this.predictionObject.recentPrediction <= 20) ? "Intermediate Risk Group" : "High Risk Group"
     this.riskGroupBasedOnAverageRecord = (this.predictionObject.averagePrediction <= 20) ? "Low Risk Group" : (this.predictionObject.averagePrediction <= 20) ? "Intermediate Risk Group" : "High Risk Group"
     this.recentCardStyle = (this.predictionObject.recentPrediction <= 10) ? "green solid 10px" : (this.predictionObject.recentPrediction <= 20) ? "yellow solid 10px" : "red solid 10px"
     this.averageCardStyle = (this.predictionObject.averagePrediction <= 20) ? "green solid 10px" : (this.predictionObject.averagePrediction <= 20) ? "yellow solid 10px" : "red solid 10px"
-    // this.showPrediction = true
-
-    // this.resultAnalysis = []
-    // const recentResult = this.predictionObject.recentPrediction
-    // const averageResult = this.predictionObject.averagePrediction
-
-    // const predictionType = this.predictionProvider.predictionMode
-
-
-    // const x = (recentResult > 10) ? "Patients within Intermediate and High risk groups are strongly advised to consult with their doctor on how they can change their life style to improve their health!" : ""
-    // const y = (averageResult > 10) ? "Patients within Intermediate and High risk groups are strongly advised to consult with their doctor on how they can change their life style to improve their health!" : ""
-
-    // this.resultAnalysis[0] = "Analysis of the results based on patients recent medical records:"
-    // this.resultAnalysis.push("Based on your recent records you are within " + this.riskGroupBasedOnRecentRecord + " with " + recentResult + "% " + predictionType)
-    // this.resultAnalysis.push(x)
-    // this.resultAnalysis[3] = "***"
-    // this.resultAnalysis[4] = "Analysis of the results based on the average of patients medical profile:"
-    // this.resultAnalysis.push("Based on your average records you are within " + this.riskGroupBasedOnAverageRecord + " with " + averageResult + "% " + predictionType)
-    // this.resultAnalysis.push(y)
   }
 }

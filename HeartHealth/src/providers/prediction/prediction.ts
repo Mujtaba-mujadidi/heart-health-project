@@ -10,7 +10,7 @@ import { FirebaseProvider } from "../firebase/firebase";
 @Injectable()
 export class PredictionProvider {
 
-  predictionMode = ""
+  private predictionMode = "" //Store the Framingham model used for the prediction.
 
 
   constructor(
@@ -19,8 +19,13 @@ export class PredictionProvider {
     console.log('Hello PredictionProvider Provider');
   }
 
+  /**
+   * @description: Predicts patients risk score and simulates the prediction to provide feedback on how patient can improve its risk score.
+   * @param patientId 
+   */
   public predict(patientId?) {
     return new Promise((resolve, reject) => {
+      //Obtains patient details
       this.firebaseProvider.getObjectFromNodeReferenceWithTheMatchingId("patients", patientId).then((patient) => {
         let systolicBp = 0
         let averageSystolicBp = 0
@@ -37,7 +42,7 @@ export class PredictionProvider {
         let glucose = 0
         let averageGlucose = 0
 
-        const didExperienceCardiovascularDisease = patient.didExperienceCardiovascularDisease
+        const didExperienceCardiovascularDisease = patient.didExperienceCardiovascularDisease //Checks if patient have already experienced a cardiovascular event.
         const isSmoking = patient.isSmoking //this is to simulate the prediction with the assumption that the patient is not smoking... this is to indicate how the prediction will change if the patient quits smoking 
         const isDiabetic = patient.isDiabetic
         const haveHypertension = patient.haveHypertension
@@ -47,10 +52,11 @@ export class PredictionProvider {
         this.predictionMode = (patient.didExperienceCardiovascularDisease) ? "Recurrent Coronary Heart Disease (2 Years Risk)" : "Hard Coronary Heart Disease (10 years risk)"
         let recentRecord
 
-        this.firebaseProvider.getPatientsRecentProfile(patientId, 360).then(async data => {
+        //Obtains patients health profile
+        this.firebaseProvider.getPatientsProfile(patientId, 360).then(async data => {
           const size = Object.keys(data).length
           await Object.keys(data).forEach(key => {
-            recentRecord = data[key]
+            recentRecord = data[key] //Stores patients recent records from its overall profile.
             systolicBp += parseInt(data[key].systolicBloodPressure)
             heartrateBp += parseInt(data[key].hearRate)
             cholesterol += parseInt(data[key].totalCholesterol)
@@ -97,16 +103,20 @@ export class PredictionProvider {
 
     })
   }
-
+  
+  /**
+   * @description:To analyse the simulated prediction results and provide feedback to patient in form of suggestion.
+   * @param simulatedPredictionResults 
+   * @param recentPrediction 
+   */
   private analyseSimulatedPredictionResults(simulatedPredictionResults, recentPrediction) {
-    console.log("analyseSimulatedPredictionResults called")
     let analysis = []
     const relaxedSmokingPredictionResult = simulatedPredictionResults.relaxedSmoking
     const relaxedBloodPressurePredictionResult = simulatedPredictionResults.relaxedBloodPressure
     const relaxedCholesterolPredictionResult = simulatedPredictionResults.relaxedCholesterol
 
     analysis.push("Prediction results based on simulations: ")
-
+  
     if (relaxedSmokingPredictionResult && relaxedSmokingPredictionResult < recentPrediction) {
       analysis.push("In this simulation the patient is assumed to be a non smoker. As result, the risk of the patient developing " + this.predictionMode + " is reduced by " + (recentPrediction - relaxedSmokingPredictionResult) + "% to " + relaxedSmokingPredictionResult + "%")
     }
@@ -121,8 +131,13 @@ export class PredictionProvider {
 
     return analysis
 
-  }
+  } 
 
+  /**
+   * @description:To analyse patients prediction results.
+   * @param recentPrediction 
+   * @param averagePrediction 
+   */
   private analysePredictionResults(recentPrediction, averagePrediction) {
     let resultAnalysis = []
     const riskGroupBasedOnRecentRecord = (recentPrediction <= 10) ? "Low Risk Group" : (recentPrediction <= 20) ? "Intermediate Risk Group" : "High Risk Group"
@@ -143,6 +158,17 @@ export class PredictionProvider {
 
   }
 
+  /**
+   * @description: To simulate predication by relaxing the smoking, systolic blood pressure, and cholesterol predicators.
+   * @param age 
+   * @param isDiabetic 
+   * @param isTreatedForHypertension 
+   * @param haveHypertension 
+   * @param recentRecord 
+   * @param isSmoking 
+   * @param isMale 
+   * @param didExperienceCardiovascularDisease 
+   */
   private simulatePredictionByRelaxingRiskFactors(age, isDiabetic, isTreatedForHypertension, haveHypertension, recentRecord, isSmoking, isMale, didExperienceCardiovascularDisease) {
     const cholesterol = recentRecord.totalCholesterol
     const hdl = recentRecord.hdlCholesterol
@@ -169,6 +195,10 @@ export class PredictionProvider {
 
   }
 
+  /**
+   * Obtains age from the date of birth
+   * @param dob 
+   */
   private getAge(dob) {
     const dateOfBirth = new Date(dob);
     const todayDate = new Date()
@@ -185,7 +215,17 @@ export class PredictionProvider {
 
   }
 
-  predictRecurrentCoronaryHearDiseaseRisk(age, totalCholesterol, hdl, sbp, isDiabetic, isSmoking, isMale) {
+  /**
+   * @description: To predict the risk of recurrent cardiovascular disease for patients who have experienced a cardiovascular event before.
+   * @param age 
+   * @param totalCholesterol 
+   * @param hdl 
+   * @param sbp 
+   * @param isDiabetic 
+   * @param isSmoking 
+   * @param isMale 
+   */
+  private predictRecurrentCoronaryHearDiseaseRisk(age, totalCholesterol, hdl, sbp, isDiabetic, isSmoking, isMale) {
     const agePoint = this.getPointByAgeForRCHD(age, isMale)
     const cholesterolAndHDLPoints = this.getTotalCholesterolAndHDLPointsForRCHD(totalCholesterol, hdl, isMale)
     const smokingPoint = (!isMale && isSmoking) ? 4 : 0 //4 points if women and smoking else 0 points.
@@ -421,8 +461,17 @@ export class PredictionProvider {
     else if (sbp >= 245) return 13
   }
 
-
-  predictHardCoronaryHeartDiseaseRisk(age, totalCholesterol, hdl, sbp, isTreatedForHypertension, isSmoking, isMale) {
+  /**
+   * @description: To predict risk of cardiovascular disease for patients with no previous cardiovascular disease experience.
+   * @param age 
+   * @param totalCholesterol 
+   * @param hdl 
+   * @param sbp 
+   * @param isTreatedForHypertension 
+   * @param isSmoking 
+   * @param isMale 
+   */
+  private predictHardCoronaryHeartDiseaseRisk(age, totalCholesterol, hdl, sbp, isTreatedForHypertension, isSmoking, isMale) {
     const agePoint = this.getPointByAgeForCHD(age, isMale)
     const cholesterolPoint = this.getTotalCholesterolPointForCHD(age, totalCholesterol, isMale)
     const smokingPoint = this.getSmokingPointForCHD(age, isSmoking, isMale)
