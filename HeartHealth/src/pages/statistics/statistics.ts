@@ -179,7 +179,7 @@ export class StatisticsPage {
       case "Heart Rate": {
         this.chartTitle = "Heart Rate (BPM)";
         this.initBarChart(this.statisticsProvider.heartRateData, this.healthProfileChartLabel)
-        this.lineChart(this.statisticsProvider.heartRateData, this.healthProfileChartLabel)
+        this.initLineChart(this.statisticsProvider.heartRateData, this.healthProfileChartLabel)
         this.resultsAnalysis = this.statisticsProvider.getAnalyses(this.riskFactor)
         break;
       }
