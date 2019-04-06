@@ -30,6 +30,7 @@ export class StatisticsPage {
   private resultsAnalysis = [] //Analysis of the results of the selected risk factor.
   private chartTitle = ""
   private healthProfileChartLabel = []
+  private suggestion = []
 
   constructor(
     public navCtrl: NavController,
@@ -52,7 +53,7 @@ export class StatisticsPage {
    */
   private retrievePatientHealthProfile(patientHealthProfileLength?, startDate?) {
     this.statisticsProvider.getPatientsHealthProfile(this.navParams.data, patientHealthProfileLength, startDate).then(() => {
-      this.healthProfileChartLabel = this.statisticsProvider.getChartLabelForPatientsHealthProfile();
+      this.healthProfileChartLabel = this.statisticsProvider.chartLabel
       this.updateChart()
     }).catch(error => {
       this.alertCtrl.create({
@@ -173,6 +174,7 @@ export class StatisticsPage {
         this.initBarChart(this.statisticsProvider.systolicBpData, this.healthProfileChartLabel)
         this.initLineChart(this.statisticsProvider.systolicBpData, this.healthProfileChartLabel)
         this.resultsAnalysis = this.statisticsProvider.getAnalyses(this.riskFactor)
+        this.suggestion = this.statisticsProvider.getSuggestion(this.riskFactor)
         break;
       }
 
@@ -181,6 +183,7 @@ export class StatisticsPage {
         this.initBarChart(this.statisticsProvider.heartRateData, this.healthProfileChartLabel)
         this.initLineChart(this.statisticsProvider.heartRateData, this.healthProfileChartLabel)
         this.resultsAnalysis = this.statisticsProvider.getAnalyses(this.riskFactor)
+        this.suggestion = this.statisticsProvider.getSuggestion(this.riskFactor)
         break;
       }
 
@@ -188,13 +191,15 @@ export class StatisticsPage {
         this.chartTitle = "Fitness level";
         this.initBarChart(this.statisticsProvider.fitnessData, this.healthProfileChartLabel)
         this.initLineChart(this.statisticsProvider.fitnessData, this.healthProfileChartLabel)
+        this.suggestion = this.statisticsProvider.getSuggestion(this.riskFactor)
         break;
       }
 
       case "Weight": {
         this.chartTitle = "Weight (Kgs)";
         this.initBarChart(this.statisticsProvider.weightData, this.healthProfileChartLabel)
-        this.lineChart(this.statisticsProvider.fitnessData, this.healthProfileChartLabel)
+        this.initLineChart(this.statisticsProvider.fitnessData, this.healthProfileChartLabel)
+        this.suggestion = this.statisticsProvider.getSuggestion(this.riskFactor)
         break;
       }
     }

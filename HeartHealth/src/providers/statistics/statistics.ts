@@ -34,7 +34,7 @@ export class StatisticsProvider {
    * @param minDate
    */
   public async getPatientsHealthProfile(id?, length?, minDate?) {
-    minDate = (minDate)? this.formatDate(minDate) : minDate
+    minDate = (minDate) ? this.formatDate(minDate) : minDate
     return new Promise(async (resolve, reject) => {
       await this.resetData()
       this.firebaseProvider.getPatientsProfile(id, length).then((data) => {
@@ -59,7 +59,7 @@ export class StatisticsProvider {
    * Coverts date to match the UK date and time format
    * @param date : date to be formatted
    */
-  private formatDate(date){
+  private formatDate(date) {
     const options = { day: 'numeric', month: 'short', year: 'numeric' }; //To Format Date
     return new Date(date).toLocaleDateString("en-gb", options)
   }
@@ -80,14 +80,14 @@ export class StatisticsProvider {
   }
 
 
-  getChartLabelForPatientsHealthProfile() {
-    return this.chartLabel
-  }
+  // getChartLabelForPatientsHealthProfile() {
+  //   return this.chartLabel
+  // }
 
 
-  getBloodPressureData() {
+  // getBloodPressureData() {
 
-  }
+  // }
 
   getAnalyses(factor) {
     if (this.systolicBpData.length == 0) {
@@ -156,6 +156,31 @@ export class StatisticsProvider {
     this.recentAnalysis.push("On average your recent Heart Rate was " + ~~(averageHeartRate / dataSize) + " BPM")
     return this.recentAnalysis
 
+  }
+
+  public getSuggestion(factor) {
+    if (this.systolicBpData.length == 0) {
+      this.recentAnalysis = [];
+      return []
+    } else {
+      switch (factor) {
+        case "Blood Pressure": {
+          return ["Follow the following guideline to maintain/reduce your blood pressure:","Reduce the amount of salt you eat and have a generally healthy diet.", "Cut back on alcohol if you drink too much.", "Lose weight", "Exercise regularly, at least for 30 minutes every day.", "Stop smoking."];
+        }
+        case "Heart Rate": {
+          return ["Follow the following guideline to maintain/reduce your heart rate to normal:" ,"Lose weight", "Exercise regularly, at least for 30 minutes every day.", "Stop smoking if you are a smoker."];
+        }
+        case "Fitness":{
+          return ["Follow the following guideline to improve your fitness","Choose an aerobic activity such as walking, swimming, light jogging, or biking. Do this at least 3 to 4 times a week. Always do 5 minutes of stretching or moving around to warm up your muscles and heart before exercising. Allow time to cool down after you exercise."] //https://medlineplus.gov/ency/patientinstructions/000094.htm
+        }
+        case "Weight":{
+          return ["Follow the following guideline to maintain/reduce your weight to normal" ,"Eat food high in fibres and low in carbs","Eat regular meals.", "Eat plenty of fruit and vegetables.", "Exercise regularly, at least for 30 minutes every day.", ""]
+        }
+        default:{
+          return []
+        }
+      }
+    }
   }
 
   analyseWeight(factor) {

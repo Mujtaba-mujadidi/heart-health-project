@@ -58,7 +58,7 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-card id="analysis-card">
+    <ion-card id="analysis-card" *ngIf = "resultsAnalysis.length!=0">
     <ion-card-header>
       Analysis
     </ion-card-header>
@@ -70,11 +70,19 @@
       </ion-list>
     </ion-card-content>
   </ion-card>
+  
 
-  <ion-card>
+  <ion-card id="analysis-card" *ngIf = "suggestion.length!=0">
     <ion-card-header>
       Suggestions
     </ion-card-header>
+    <ion-card-content>
+      <ion-list *ngFor="let str of suggestion">
+        <ion-item no-lines>
+          <p text-wrap>{{str}}</p>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
   </ion-card>
 
 
