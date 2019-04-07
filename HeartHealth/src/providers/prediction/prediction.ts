@@ -146,12 +146,12 @@ export class PredictionProvider {
     const x = (recentPrediction > 10) ? "Patients within Intermediate and High risk groups are strongly advised to consult with their doctor on how they can change their life style to improve their health!" : ""
     const y = (averagePrediction > 10) ? "Patients within Intermediate and High risk groups are strongly advised to consult with their doctor on how they can change their life style to improve their health!" : ""
 
-    resultAnalysis[0] = "Analysis of the results based on patients recent medical records:"
-    resultAnalysis.push("Based on your recent records you are within " + riskGroupBasedOnRecentRecord + " with " + recentPrediction + "% " + this.predictionMode)
+    resultAnalysis[0] = "Analysis of the results based on patient's recent medical records:"
+    resultAnalysis.push("Based on the recent records patient is within " + riskGroupBasedOnRecentRecord + " with " + recentPrediction + "% " + this.predictionMode)
     resultAnalysis.push(x)
-    resultAnalysis[3] = "***"
-    resultAnalysis[4] = "Analysis of the results based on the average of patients medical profile:"
-    resultAnalysis.push("Based on your average records you are within " + riskGroupBasedOnAverageRecord + " with " + averagePrediction + "% " + this.predictionMode)
+    resultAnalysis[3] = " "
+    resultAnalysis[4] = "Analysis of the results based on the average of patient's medical profile:"
+    resultAnalysis.push("Based on the average records patient is within " + riskGroupBasedOnAverageRecord + " with " + averagePrediction + "% " + this.predictionMode)
     resultAnalysis.push(y)
 
     return resultAnalysis

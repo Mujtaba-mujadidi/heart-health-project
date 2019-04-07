@@ -42,13 +42,41 @@
           <ion-label text-wrap item-end>{{patientDetails.email}}</ion-label>
         </ion-item>
         <ion-item *ngIf="patientDetails.didExperienceCardiovascularDisease">
-          <ion-label text-wrap><b>Has patient experienced a cardiovascular event:</b></ion-label>
+          <ion-label text-wrap><b>Experienced a cardiovascular event:</b></ion-label>
           <ion-label text-wrap item-end>Yes</ion-label>
         </ion-item>
         <ion-item *ngIf="!patientDetails.didExperienceCardiovascularDisease">
-          <ion-label text-wrap><b>Has patient experienced a cardiovascular event:</b></ion-label>
+          <ion-label text-wrap><b>Experienced a cardiovascular event:</b></ion-label>
           <ion-label text-wrap item-end>No</ion-label>
         </ion-item>
+
+        <ion-item *ngIf="patientDetails.haveHypertension">
+          <ion-label text-wrap><b>Hypertension:</b></ion-label>
+          <ion-label text-wrap item-end>Yes</ion-label>
+        </ion-item>
+        <ion-item *ngIf="!patientDetails.haveHypertension">
+          <ion-label text-wrap><b>Hypertension:</b></ion-label>
+          <ion-label text-wrap item-end>No</ion-label>
+        </ion-item>
+
+         <ion-item *ngIf="patientDetails.isDiabetic">
+          <ion-label text-wrap><b>Diabetic:</b></ion-label>
+          <ion-label text-wrap item-end>Yes</ion-label>
+        </ion-item>
+        <ion-item *ngIf="!patientDetails.isDiabetic">
+          <ion-label text-wrap><b>Diabetic:</b></ion-label>
+          <ion-label text-wrap item-end>No</ion-label>
+        </ion-item>
+
+        <ion-item *ngIf="patientDetails.isSmoking">
+          <ion-label text-wrap><b>Smoker:</b></ion-label>
+          <ion-label text-wrap item-end>Yes</ion-label>
+        </ion-item>
+        <ion-item *ngIf="!patientDetails.isSmoking">
+          <ion-label text-wrap><b>Smoker:</b></ion-label>
+          <ion-label text-wrap item-end>No</ion-label>
+        </ion-item>
+
       </ion-card-content>
     </ion-card>
 

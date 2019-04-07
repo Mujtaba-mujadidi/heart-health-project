@@ -100,6 +100,11 @@
               <ion-label item-start>Email</ion-label>
               <p item-end>{{patient.payload.val().email}}</p>
             </ion-item>
+            
+            <ion-item>
+              <ion-label item-start>Cardiovascular disease risk</ion-label>
+              <p item-end>{{patient.risk}}</p>
+            </ion-item>
 
             <ion-item>
               <button ion-button full (click)="viewPatient(patient.payload)">View</button>
