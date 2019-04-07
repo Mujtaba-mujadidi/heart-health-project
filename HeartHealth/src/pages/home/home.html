@@ -74,7 +74,7 @@
         <form [formGroup]="patientHealthRecordForm">
           <ion-item>
             <ion-label text-wrap>Systolic BP (mm Hg):</ion-label>
-            <ion-input autocorrect=“on” autocomplete="on" type="number" patientHealthRecordFormControlName="systolicBloodPressure"></ion-input>
+            <ion-input autocorrect=“on” autocomplete="on" type="number" formControlName="systolicBloodPressure"></ion-input>
           </ion-item>
 
           <ion-item *ngIf="!patientHealthRecordForm.controls.systolicBloodPressure.valid  && (patientHealthRecordForm.controls.systolicBloodPressure.dirty)">
@@ -83,7 +83,7 @@
 
           <ion-item>
             <ion-label text-wrap>Diastolic BP (mm Hg):</ion-label>
-            <ion-input autocorrect=“on” autocomplete="on" type="number" patientHealthRecordFormControlName="diastolicBloodPressure"></ion-input>
+            <ion-input autocorrect=“on” autocomplete="on" type="number" formControlName="diastolicBloodPressure"></ion-input>
           </ion-item>
 
           <ion-item *ngIf="!patientHealthRecordForm.controls.diastolicBloodPressure.valid  && (patientHealthRecordForm.controls.diastolicBloodPressure.dirty)">
@@ -92,7 +92,7 @@
 
           <ion-item>
             <ion-label text-wrap>Total Cholesterol (mg/dL):</ion-label>
-            <ion-input autocorrect=“on” autocomplete="on" type="number" patientHealthRecordFormControlName="totalCholesterol"></ion-input>
+            <ion-input autocorrect=“on” autocomplete="on" type="number" formControlName="totalCholesterol"></ion-input>
           </ion-item>
 
           <ion-item *ngIf="!patientHealthRecordForm.controls.totalCholesterol.valid  && (patientHealthRecordForm.controls.totalCholesterol.dirty)">
@@ -101,7 +101,7 @@
 
           <ion-item>
             <ion-label text-wrap>HDL (mg/dL):</ion-label>
-            <ion-input autocorrect=“on” autocomplete="on" type="number" patientHealthRecordFormControlName="hdlCholesterol"></ion-input>
+            <ion-input autocorrect=“on” autocomplete="on" type="number" formControlName="hdlCholesterol"></ion-input>
           </ion-item>
 
           <ion-item *ngIf="!patientHealthRecordForm.controls.hdlCholesterol.valid  && (patientHealthRecordForm.controls.hdlCholesterol.dirty)">
@@ -110,7 +110,7 @@
 
           <ion-item>
             <ion-label>Heart Rate (BPM): {{patientHealthRecordForm.value.hearRate}}</ion-label>
-            <ion-range min="0" max="150" patientHealthRecordFormControlName="hearRate" pin="true" color="secondary">
+            <ion-range min="0" max="150" formControlName="hearRate" pin="true" color="secondary">
               <ion-label range-left>0</ion-label>
               <ion-label range-right>150</ion-label>
             </ion-range>
@@ -122,7 +122,7 @@
 
           <ion-item>
             <ion-label text-wrap>Glucose Level (mmol/L):</ion-label>
-            <ion-input autocorrect=“on” autocomplete="on" type="number" patientHealthRecordFormControlName="glucose"></ion-input>
+            <ion-input autocorrect=“on” autocomplete="on" type="number" formControlName="glucose"></ion-input>
           </ion-item>
 
           <ion-item *ngIf="!patientHealthRecordForm.controls.glucose.valid  && (patientHealthRecordForm.controls.glucose.dirty)">
@@ -131,17 +131,18 @@
 
           <ion-item>
             <ion-label text-wrap>Weight (Kg):</ion-label>
-            <ion-input autocorrect=“on” autocomplete="on" type="number" patientHealthRecordFormControlName="weight"></ion-input>
+            <ion-input autocorrect=“on” autocomplete="on" type="number" formControlName="weight"></ion-input>
           </ion-item>
 
           <ion-item *ngIf="!patientHealthRecordForm.controls.weight.valid  && (patientHealthRecordForm.controls.weight.dirty)">
             <p class="invalid_input">Please enter your Weight.</p>
           </ion-item>
 
-          <ion-list radio-group patientHealthRecordFormControlName="fitnessLength" no-lines>
+          <ion-list radio-group formControlName="fitnessLength" no-lines>
             <ion-item>
               <ion-label text-wrap>Fitness (min):</ion-label>
-              <ion-select patientHealthRecordFormControlName="fitnessLength" interface="popover">
+              <ion-select formControlName="fitnessLength" interface="popover">
+                <ion-option value="0">0 mins</ion-option>
                 <ion-option value="30">30 mins</ion-option>
                 <ion-option value="45">45 mins</ion-option>
                 <ion-option value="60">60 mins</ion-option>
@@ -153,7 +154,7 @@
             <p class="invalid_input">Please enter your Fitness.</p>
           </ion-item>
         </form>
-        <button ion-button full id="signUp-btn" (click)="submitPatientHealthRecordForm()" [disabled]="!patientHealthRecordForm.valid ">Submit patientHealthRecordForm</button>
+        <button ion-button full id="signUp-btn" (click)="submitPatientHealthRecordForm()" [disabled]="!patientHealthRecordForm.valid ">Submit Health Record</button>
 
       </ion-card-content>
     </ion-card>

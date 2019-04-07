@@ -115,7 +115,6 @@ export class HomePage {
       totalCholesterol: ['', Validators.required],
       hdlCholesterol: ['', Validators.required],
       fitnessLength: ['', Validators.required]
-
     })
   }
 
