@@ -15,6 +15,7 @@ export class StatisticsProvider {
   chartLabel = []
   systolicBpData = []
   diastolicBpData = []
+  bloodGlucoseData = []
   heartRateData = []
   fitnessData = []
   weightData = []
@@ -47,6 +48,7 @@ export class StatisticsProvider {
             this.heartRateData.push(data[key].hearRate)
             this.fitnessData.push(data[key].fitnessLength)
             this.weightData.push(data[key].weight)
+            this.bloodGlucoseData.push(data[key].glucose)
           }
         })
         resolve()
@@ -94,12 +96,13 @@ export class StatisticsProvider {
       this.recentAnalysis = [];
       return []
     } else {
-      if (this.systolicBpData == []) console.log("Test");
       switch (factor) {
         case "Blood Pressure":
           return this.analyseBloodPressure();
         case "Heart Rate":
-          return this.analyseHeartRate()
+          return this.analyseHeartRate();
+        case "Blood Glucose":
+          return this.analyseBloodGlucose();
       }
     }
   }
@@ -108,9 +111,7 @@ export class StatisticsProvider {
     this.recentAnalysis = [];
     if (this.systolicBpData == []) return
     const dataSize = this.chartLabel.length;
-    let toReturn = "";
     const systolicBP = (this.systolicBpData[0] < 140) ? "within normal range \(< 140 mmHg\)" : "above the normal range \(>=140mmHg\)"
-    toReturn += "On " + this.chartLabel[0] + " your Systolic Blood Pressure was " + systolicBP
     let averageSystolicBloodPressure = parseInt(this.systolicBpData[0]);
 
     this.recentAnalysis.push("On " + this.chartLabel[0] + " your Systolic Blood Pressure was " + systolicBP)
@@ -119,23 +120,47 @@ export class StatisticsProvider {
     for (let i = 1; i < dataSize; i++) {
       const systolicBP = (this.systolicBpData[i] < 140) ? "within normal range \(< 140 mmHg\)" : "above the normal range \(>=140mmHg\)"
       const comparison = (this.systolicBpData[i] > this.systolicBpData[i - 1]) ? "increased by " + (this.systolicBpData[i] - this.systolicBpData[i - 1]) : (this.systolicBpData[i] < this.systolicBpData[i - 1]) ? "decreased by " + (this.systolicBpData[i - 1] - this.systolicBpData[i]) : " remained the same "
-      toReturn += "\n\nOn " + this.chartLabel[i] + " your Systolic Blood Pressure " + comparison + " to " + this.systolicBpData[i] + " mmHg which is " + systolicBP
       this.recentAnalysis.push("On " + this.chartLabel[i] + " your Systolic Blood Pressure " + comparison + " to " + this.systolicBpData[i] + " mmHg which is " + systolicBP)
       averageSystolicBloodPressure += parseInt(this.systolicBpData[i])
 
     }
-
-    toReturn += "\n\nOn average your recent Systolic Blood Pressure was " + ~~(averageSystolicBloodPressure / dataSize) + " mmHg"
-
     this.recentAnalysis.push("On average your recent Systolic Blood Pressure was " + ~~(averageSystolicBloodPressure / dataSize) + " mmHg")
 
     return this.recentAnalysis
-
   }
+
+    analyseBloodGlucose() {
+    this.recentAnalysis = [];
+    console.log(this.bloodGlucoseData)
+    if (this.bloodGlucoseData == []) return
+
+    const dataSize = this.chartLabel.length;
+    const bloodGlucose = (this.bloodGlucoseData[0] < 6) ? "within normal range \(4.0 to 5.9 mmol/L\)" : "above the normal range \(>=6 mmol/L\)"
+    
+    let averageSystolicBloodGlucose = parseInt(this.bloodGlucoseData[0]);
+
+    this.bloodGlucoseData.push("On " + this.chartLabel[0] + " your fasting blood glucose level was" + bloodGlucose)
+
+
+
+    for (let i = 1; i < dataSize; i++) {
+      const bloodGlucose = (this.bloodGlucoseData[0] < 6) ? "within normal range \(4.0 to 5.9 mmol/L\)" : "above the normal range \(>=6 mmol/L\)"
+      const comparison = (this.bloodGlucoseData[i] > this.bloodGlucoseData[i - 1]) ? "increased by " + (this.bloodGlucoseData[i] - this.bloodGlucoseData[i - 1]) : (this.bloodGlucoseData[i] < this.bloodGlucoseData[i - 1]) ? "decreased by " + (this.bloodGlucoseData[i - 1] - this.bloodGlucoseData[i]) : " remained the same "
+      this.recentAnalysis.push("On " + this.chartLabel[i] + " fasting blood glucose level " + comparison + " to " + this.systolicBpData[i] + " mmol/L which is " + bloodGlucose)
+      averageSystolicBloodGlucose += parseInt(this.bloodGlucoseData[i])
+
+    }
+    this.recentAnalysis.push("On average your fasting blood glucose level was " + ~~(averageSystolicBloodGlucose / dataSize) + " mmol/L")
+
+    return this.recentAnalysis
+  }
+
+
+
 
   analyseHeartRate() {
     this.recentAnalysis = [];
-    if (this.heartRateData == []) return
+    if (this.heartRateData.length == 0) return
     const dataSize = this.chartLabel.length;
     let toReturn = "";
     const heartRate = (this.heartRateData[0] <= 100) ? "within normal range \(<= 100 BPM\)" : "above the normal range \(> 100BPM\)"
@@ -159,8 +184,8 @@ export class StatisticsProvider {
   }
 
   public getSuggestion(factor) {
+    console.log(factor)
     if (this.systolicBpData.length == 0) {
-      this.recentAnalysis = [];
       return []
     } else {
       switch (factor) {
@@ -175,6 +200,9 @@ export class StatisticsProvider {
         }
         case "Weight":{
           return ["Follow the following guideline to maintain/reduce your weight to normal" ,"Eat food high in fibres and low in carbs","Eat regular meals.", "Eat plenty of fruit and vegetables.", "Exercise regularly, at least for 30 minutes every day.", ""]
+        }
+        case "Blood Glucose":{
+          return ["Follow the following guideline to maintain/reduce your blood glucose level to normal","Eat plenty of vegetables", "Have sufficient fibre in your diet", "Cut down on sugar", "Cut down on processed meat", "Eat fish regularly"] //https://www.diabetes.co.uk/diet/nhs-diet-advice.html
         }
         default:{
           return []

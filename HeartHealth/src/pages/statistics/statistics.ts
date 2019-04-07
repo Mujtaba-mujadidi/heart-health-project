@@ -187,6 +187,15 @@ export class StatisticsPage {
         break;
       }
 
+      case "Blood Glucose": {
+        this.chartTitle = "Blood Glucose (mmol/L)";
+        this.initBarChart(this.statisticsProvider.bloodGlucoseData, this.healthProfileChartLabel)
+        this.initLineChart(this.statisticsProvider.bloodGlucoseData, this.healthProfileChartLabel)
+        this.resultsAnalysis = this.statisticsProvider.getAnalyses(this.riskFactor)
+        this.suggestion = this.statisticsProvider.getSuggestion(this.riskFactor)
+        break;
+      }
+
       case "Fitness": {
         this.chartTitle = "Fitness level (mins)";
         this.initBarChart(this.statisticsProvider.fitnessData, this.healthProfileChartLabel)
