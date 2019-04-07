@@ -53,6 +53,7 @@ export class LoginPage {
         this.navCtrl.setRoot(TabsPage)
       }
     }).catch(error => {
+      alert(error)
       console.log(error)
     });
   }
