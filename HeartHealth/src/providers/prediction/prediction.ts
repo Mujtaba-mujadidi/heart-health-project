@@ -149,8 +149,7 @@ export class PredictionProvider {
     resultAnalysis[0] = "Analysis of the results based on patient's recent medical records:"
     resultAnalysis.push("Based on the recent records patient is within " + riskGroupBasedOnRecentRecord + " with " + recentPrediction + "% " + this.predictionMode)
     resultAnalysis.push(x)
-    resultAnalysis[3] = " "
-    resultAnalysis[4] = "Analysis of the results based on the average of patient's medical profile:"
+    resultAnalysis[3] = "Analysis of the results based on the average of patient's medical profile:"
     resultAnalysis.push("Based on the average records patient is within " + riskGroupBasedOnAverageRecord + " with " + averagePrediction + "% " + this.predictionMode)
     resultAnalysis.push(y)
 
