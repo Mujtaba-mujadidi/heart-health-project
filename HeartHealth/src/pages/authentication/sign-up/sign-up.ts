@@ -77,7 +77,7 @@ export class SignUpPage {
 
     this.authenticationProvider.signUp(userDetails.email, userDetails.password).then(() => {
       this.registerNewUser(userDetails)
-    }).catch((error) => console.log(error))
+    }).catch((error) => alert(error))
   }
 
   /**

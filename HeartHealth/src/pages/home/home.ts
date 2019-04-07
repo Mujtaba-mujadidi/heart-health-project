@@ -152,7 +152,8 @@ export class HomePage {
     this.firebaseProvider.setObjectToFirebaseListWithTheGivenID("patientsHealth/" + userUid, this.patientHealthRecordForm.value, datepatientHealthRecordFormated).then(() => {
       this.calculatePatientsBMI(this.patientHealthRecordForm.value.weight)
       this.patientHealthRecordForm.reset()
-    });
+      alert("Your record submitted successfully")
+    }).catch(error => alert(error));
   }
 
 
