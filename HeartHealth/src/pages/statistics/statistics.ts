@@ -188,7 +188,7 @@ export class StatisticsPage {
       }
 
       case "Fitness": {
-        this.chartTitle = "Fitness level";
+        this.chartTitle = "Fitness level (mins)";
         this.initBarChart(this.statisticsProvider.fitnessData, this.healthProfileChartLabel)
         this.initLineChart(this.statisticsProvider.fitnessData, this.healthProfileChartLabel)
         this.suggestion = this.statisticsProvider.getSuggestion(this.riskFactor)
