@@ -114,17 +114,17 @@ export class StatisticsProvider {
     const systolicBP = (this.systolicBpData[0] < 140) ? "within normal range \(< 140 mmHg\)" : "above the normal range \(>=140mmHg\)"
     let averageSystolicBloodPressure = parseInt(this.systolicBpData[0]);
 
-    this.recentAnalysis.push("On " + this.chartLabel[0] + " your Systolic Blood Pressure was " + systolicBP)
+    this.recentAnalysis.push("On " + this.chartLabel[0] + " Systolic Blood Pressure was " + systolicBP)
 
 
     for (let i = 1; i < dataSize; i++) {
       const systolicBP = (this.systolicBpData[i] < 140) ? "within normal range \(< 140 mmHg\)" : "above the normal range \(>=140mmHg\)"
       const comparison = (this.systolicBpData[i] > this.systolicBpData[i - 1]) ? "increased by " + (this.systolicBpData[i] - this.systolicBpData[i - 1]) : (this.systolicBpData[i] < this.systolicBpData[i - 1]) ? "decreased by " + (this.systolicBpData[i - 1] - this.systolicBpData[i]) : " remained the same "
-      this.recentAnalysis.push("On " + this.chartLabel[i] + " your Systolic Blood Pressure " + comparison + " to " + this.systolicBpData[i] + " mmHg which is " + systolicBP)
+      this.recentAnalysis.push("On " + this.chartLabel[i] + " Systolic Blood Pressure " + comparison + " to " + this.systolicBpData[i] + " mmHg which is " + systolicBP)
       averageSystolicBloodPressure += parseInt(this.systolicBpData[i])
 
     }
-    this.recentAnalysis.push("On average your recent Systolic Blood Pressure was " + ~~(averageSystolicBloodPressure / dataSize) + " mmHg")
+    this.recentAnalysis.push("On average recent Systolic Blood Pressure was " + ~~(averageSystolicBloodPressure / dataSize) + " mmHg")
 
     return this.recentAnalysis
   }
@@ -139,7 +139,7 @@ export class StatisticsProvider {
     
     let averageSystolicBloodGlucose = parseInt(this.bloodGlucoseData[0]);
 
-    this.bloodGlucoseData.push("On " + this.chartLabel[0] + " your fasting blood glucose level was" + bloodGlucose)
+    this.bloodGlucoseData.push("On " + this.chartLabel[0] + " fasting blood glucose level was" + bloodGlucose)
 
 
 
@@ -150,7 +150,7 @@ export class StatisticsProvider {
       averageSystolicBloodGlucose += parseInt(this.bloodGlucoseData[i])
 
     }
-    this.recentAnalysis.push("On average your fasting blood glucose level was " + ~~(averageSystolicBloodGlucose / dataSize) + " mmol/L")
+    this.recentAnalysis.push("On average fasting blood glucose level was " + ~~(averageSystolicBloodGlucose / dataSize) + " mmol/L")
 
     return this.recentAnalysis
   }
@@ -164,21 +164,18 @@ export class StatisticsProvider {
     const dataSize = this.chartLabel.length;
     let toReturn = "";
     const heartRate = (this.heartRateData[0] <= 100) ? "within normal range \(<= 100 BPM\)" : "above the normal range \(> 100BPM\)"
-    toReturn += "On " + this.chartLabel[0] + " your Heart rate was " + heartRate
-    this.recentAnalysis.push("On " + this.chartLabel[0] + " your Heart rate was " + heartRate);
+    this.recentAnalysis.push("On " + this.chartLabel[0] + " Heart rate was " + heartRate);
 
     let averageHeartRate = parseInt(this.heartRateData[0]);
 
     for (let i = 1; i < dataSize; i++) {
       const heartRate = (this.systolicBpData[i] < 140) ? "within normal range \(<= 100 BPM\)" : "above the normal range \(> 100BPM\)"
       const comparison = (this.heartRateData[i] > this.heartRateData[i - 1]) ? "increased by " + (this.heartRateData[i] - this.heartRateData[i - 1]) : (this.heartRateData[i] < this.heartRateData[i - 1]) ? "decreased by " + (this.heartRateData[i - 1] - this.heartRateData[i]) : " remained the same "
-      toReturn += "\n\nOn " + this.chartLabel[i] + " your Heart Rate " + comparison + " to " + this.heartRateData[i] + " BPM which is " + heartRate
-      this.recentAnalysis.push("On " + this.chartLabel[i] + " your Heart Rate " + comparison + " to " + this.heartRateData[i] + " BPM which is " + heartRate)
+      this.recentAnalysis.push("On " + this.chartLabel[i] + " Heart Rate " + comparison + " to " + this.heartRateData[i] + " BPM which is " + heartRate)
       averageHeartRate += parseInt(this.heartRateData[i])
     }
 
-    toReturn += "\n\nOn average your recent Heart Rate was " + ~~(averageHeartRate / dataSize) + " BPM"
-    this.recentAnalysis.push("On average your recent Heart Rate was " + ~~(averageHeartRate / dataSize) + " BPM")
+    this.recentAnalysis.push("On average recent Heart Rate was " + ~~(averageHeartRate / dataSize) + " BPM")
     return this.recentAnalysis
 
   }
