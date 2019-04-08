@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
-
-
-
 import { Observable } from 'rxjs/Observable';
-
 import 'rxjs/add/operator/map';
 import { FirebaseProvider } from "../firebase/firebase";
+
+/*
+  All Prediction functionalities are maintained in this provider..
+*/
 
 @Injectable()
 export class PredictionProvider {
 
   private predictionMode = "" //Store the Framingham model used for the prediction.
-
 
   constructor(
     private firebaseProvider: FirebaseProvider
@@ -103,7 +102,7 @@ export class PredictionProvider {
 
     })
   }
-  
+
   /**
    * @description:To analyse the simulated prediction results and provide feedback to patient in form of suggestion.
    * @param simulatedPredictionResults 
@@ -116,7 +115,7 @@ export class PredictionProvider {
     const relaxedCholesterolPredictionResult = simulatedPredictionResults.relaxedCholesterol
 
     analysis.push("Prediction results based on simulations: ")
-  
+
     if (relaxedSmokingPredictionResult && relaxedSmokingPredictionResult < recentPrediction) {
       analysis.push("In this simulation the patient is assumed to be a non smoker. As result, the risk of the patient developing " + this.predictionMode + " is reduced by " + (recentPrediction - relaxedSmokingPredictionResult) + "% to " + relaxedSmokingPredictionResult + "%")
     }
@@ -131,7 +130,7 @@ export class PredictionProvider {
 
     return analysis
 
-  } 
+  }
 
   /**
    * @description:To analyse patients prediction results.
@@ -441,8 +440,6 @@ export class PredictionProvider {
       else return 22
     }
   }
-
-
 
   private getSystolicBPPointForRCHD(sbp) {
     if (sbp < 110) return 0

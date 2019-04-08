@@ -1,9 +1,3 @@
-<!--
-  Generated template for the DoctorMainPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
 
   <ion-navbar>
@@ -17,7 +11,6 @@
   </ion-navbar>
 
 </ion-header>
-
 
 <ion-content padding>
   <ion-segment [(ngModel)]="doctorMainPageSegment">
@@ -60,7 +53,7 @@
       <br>
       <ion-item>
         <ion-label>View: </ion-label>
-        <ion-select class="myCustomSelect" [(ngModel)]="viewSortedPatientsBasedOnRisk" (ionChange)="sortListOfPatients()" interface="popover">
+        <ion-select class="customSelect" [(ngModel)]="viewSortedPatientsBasedOnRisk" (ionChange)="sortListOfPatients()" interface="popover">
           <ion-option [value]="false">All Patients</ion-option>
           <ion-option [value]="true">Patient Sorted Based On Risk</ion-option>
         </ion-select>
@@ -113,7 +106,6 @@
           </ion-card-content>
         </ion-card>
       </div>
-
     </div>
   </div>
 </ion-content>

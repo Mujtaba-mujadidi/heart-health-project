@@ -4,12 +4,6 @@ import { Chart } from 'chart.js';
 import { FirebaseProvider } from "../../providers/firebase/firebase";
 import { StatisticsProvider } from "../../providers/statistics/statistics";
 
-/**
- * Generated class for the StatisticsPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({

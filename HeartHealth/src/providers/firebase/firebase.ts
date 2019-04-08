@@ -3,8 +3,6 @@ import { AngularFireDatabase } from '@angular/fire/database';
 import * as firebase from "firebase";
 import { Observable } from 'rxjs/Observable';
 
-
-
 /*
   All connections are made through this class with the Firebase Database.
 */

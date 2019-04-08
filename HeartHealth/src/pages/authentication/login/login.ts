@@ -6,10 +6,7 @@ import { TabsPage } from "../../tabs/tabs";
 import { DoctorMainPage } from "../../doctor-main/doctor-main";
 
 /**
- * Generated class for the LoginPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
+ * Login page contains login functionalities.
  */
 
 @IonicPage()

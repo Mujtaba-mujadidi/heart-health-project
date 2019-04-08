@@ -1,10 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 /**
- * Generated class for the ProgressBarComponent component.
- *
- * See https://angular.io/api/core/Component for more info on Angular
- * Components.
+ * A dynamic component that shows progress.
  */
 @Component({
   selector: 'progress-bar',
@@ -12,9 +9,8 @@ import { Component, Input } from '@angular/core';
 })
 export class ProgressBarComponent {
 
-    @Input('progress') progress;
-    color = "red"
-
+  @Input('progress') progress;
+  color = "red"
 
   constructor() {
     console.log('Hello ProgressBarComponent Component');

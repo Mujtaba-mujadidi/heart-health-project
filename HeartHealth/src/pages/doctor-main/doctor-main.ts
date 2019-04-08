@@ -8,10 +8,7 @@ import { PredictionProvider } from "../../providers/prediction/prediction";
 import { LoginPage } from "../authentication/login/login";
 
 /**
- * Generated class for the DoctorMainPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
+ * Doctor main page once successfully logged in.
  */
 
 @IonicPage()

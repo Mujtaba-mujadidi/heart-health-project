@@ -7,10 +7,7 @@ import { FirebaseProvider } from "../../../providers/firebase/firebase";
 import { Observable } from 'rxjs/Observable';
 
 /**
- * Generated class for the SignUpPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
+ * Sign up page contain all registration functionalities.
  */
 
 @IonicPage()

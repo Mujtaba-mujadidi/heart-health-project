@@ -11,13 +11,10 @@ import { FirebaseProvider } from "../../providers/firebase/firebase";
 })
 export class PredictionPage {
 
-
   private showPrediction = false //To show and hide the prediction results
 
   private recentCardStyle = "" //Used to dynamically set the card style for the prediction result based on the recent records.
-  // private recentPredictionAnalysis = ""
   private averageCardStyle = "" //Used to dynamically set the card style for the prediction result based on the average records.
-  // private averagePredictionAnalysis = ""
 
   private resultAnalysis = [] //Analysis of the prediction result.
   private simulatedResultsAnalysis = [] //Analysis of the the simulated prediction results.

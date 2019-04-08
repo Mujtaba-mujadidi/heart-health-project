@@ -2,10 +2,7 @@ import { Injectable } from '@angular/core';
 import { FirebaseProvider } from "../firebase/firebase";
 
 /*
-  Generated class for the StatisticsProvider provider.
-
-  See https://angular.io/guide/dependency-injection for more info on providers
-  and Angular DI.
+  All statistics page functionalities are provided in this class.
 */
 @Injectable()
 export class StatisticsProvider {
@@ -20,7 +17,6 @@ export class StatisticsProvider {
   fitnessData = []
   weightData = []
   recentAnalysis = []
-
 
   constructor(
     private firebaseProvider: FirebaseProvider
@@ -53,7 +49,6 @@ export class StatisticsProvider {
         })
         resolve()
       }).catch(error => reject(error))
-
     })
   }
 
@@ -81,17 +76,12 @@ export class StatisticsProvider {
     })
   }
 
-
-  // getChartLabelForPatientsHealthProfile() {
-  //   return this.chartLabel
-  // }
-
-
-  // getBloodPressureData() {
-
-  // }
-
-  getAnalyses(factor) {
+  /**
+   * @description: To analyse the risk factor data.
+   * @param factor: Risk factor selected by the user to be analysed. 
+   */
+  public getAnalyses(factor) {
+    //If there are no data, then there is no analysis, hence return [].
     if (this.systolicBpData.length == 0) {
       this.recentAnalysis = [];
       return []
@@ -107,15 +97,16 @@ export class StatisticsProvider {
     }
   }
 
-  analyseBloodPressure() {
-    this.recentAnalysis = [];
-    if (this.systolicBpData == []) return
+  /**
+   * @description: To analyse systolic blood pressure data.
+   */
+  private analyseBloodPressure() {
+    this.recentAnalysis = []; //resets recent analysis
     const dataSize = this.chartLabel.length;
     const systolicBP = (this.systolicBpData[0] < 140) ? "within normal range \(< 140 mmHg\)" : "above the normal range \(>=140mmHg\)"
     let averageSystolicBloodPressure = parseInt(this.systolicBpData[0]);
 
     this.recentAnalysis.push("On " + this.chartLabel[0] + " Systolic Blood Pressure was " + systolicBP)
-
 
     for (let i = 1; i < dataSize; i++) {
       const systolicBP = (this.systolicBpData[i] < 140) ? "within normal range \(< 140 mmHg\)" : "above the normal range \(>=140mmHg\)"
@@ -129,19 +120,18 @@ export class StatisticsProvider {
     return this.recentAnalysis
   }
 
-    analyseBloodGlucose() {
+  /**
+   * @description: To analyse blood glucose level.
+   */
+  private analyseBloodGlucose() {
     this.recentAnalysis = [];
-    console.log(this.bloodGlucoseData)
-    if (this.bloodGlucoseData == []) return
 
     const dataSize = this.chartLabel.length;
     const bloodGlucose = (this.bloodGlucoseData[0] < 6) ? "within normal range \(4.0 to 5.9 mmol/L\)" : "above the normal range \(>=6 mmol/L\)"
-    
+
     let averageSystolicBloodGlucose = parseInt(this.bloodGlucoseData[0]);
 
     this.bloodGlucoseData.push("On " + this.chartLabel[0] + " fasting blood glucose level was" + bloodGlucose)
-
-
 
     for (let i = 1; i < dataSize; i++) {
       const bloodGlucose = (this.bloodGlucoseData[0] < 6) ? "within normal range \(4.0 to 5.9 mmol/L\)" : "above the normal range \(>=6 mmol/L\)"
@@ -155,14 +145,12 @@ export class StatisticsProvider {
     return this.recentAnalysis
   }
 
-
-
-
-  analyseHeartRate() {
+  /**
+   * @description: To analyse heart rate.
+   */
+  private analyseHeartRate() {
     this.recentAnalysis = [];
-    if (this.heartRateData.length == 0) return
     const dataSize = this.chartLabel.length;
-    let toReturn = "";
     const heartRate = (this.heartRateData[0] <= 100) ? "within normal range \(<= 100 BPM\)" : "above the normal range \(> 100BPM\)"
     this.recentAnalysis.push("On " + this.chartLabel[0] + " Heart rate was " + heartRate);
 
@@ -180,6 +168,10 @@ export class StatisticsProvider {
 
   }
 
+  /**
+   * @description: To return a generic list of suggestions takes from the NHS website.
+   * @param factor: Risk Factor selected by the user.
+   */
   public getSuggestion(factor) {
     console.log(factor)
     if (this.systolicBpData.length == 0) {
@@ -187,28 +179,24 @@ export class StatisticsProvider {
     } else {
       switch (factor) {
         case "Blood Pressure": {
-          return ["Follow the following guideline to maintain/reduce your blood pressure:","Reduce the amount of salt you eat and have a generally healthy diet.", "Cut back on alcohol if you drink too much.", "Lose weight", "Exercise regularly, at least for 30 minutes every day.", "Stop smoking."];
+          return ["Follow the following guideline to maintain/reduce your blood pressure:", "Reduce the amount of salt you eat and have a generally healthy diet.", "Cut back on alcohol if you drink too much.", "Lose weight", "Exercise regularly, at least for 30 minutes every day.", "Stop smoking."];
         }
         case "Heart Rate": {
-          return ["Follow the following guideline to maintain/reduce your heart rate to normal:" ,"Lose weight", "Exercise regularly, at least for 30 minutes every day.", "Stop smoking if you are a smoker."];
+          return ["Follow the following guideline to maintain/reduce your heart rate to normal:", "Lose weight", "Exercise regularly, at least for 30 minutes every day.", "Stop smoking if you are a smoker."];
         }
-        case "Fitness":{
-          return ["Follow the following guideline to improve your fitness","Choose an aerobic activity such as walking, swimming, light jogging, or biking. Do this at least 3 to 4 times a week. Always do 5 minutes of stretching or moving around to warm up your muscles and heart before exercising. Allow time to cool down after you exercise."] //https://medlineplus.gov/ency/patientinstructions/000094.htm
+        case "Fitness": {
+          return ["Follow the following guideline to improve your fitness", "Choose an aerobic activity such as walking, swimming, light jogging, or biking. Do this at least 3 to 4 times a week. Always do 5 minutes of stretching or moving around to warm up your muscles and heart before exercising. Allow time to cool down after you exercise."] //taken form the https://medlineplus.gov/ency/patientinstructions/000094.htm site
         }
-        case "Weight":{
-          return ["Follow the following guideline to maintain/reduce your weight to normal" ,"Eat food high in fibres and low in carbs","Eat regular meals.", "Eat plenty of fruit and vegetables.", "Exercise regularly, at least for 30 minutes every day.", ""]
+        case "Weight": {
+          return ["Follow the following guideline to maintain/reduce your weight to normal", "Eat food high in fibres and low in carbs", "Eat regular meals.", "Eat plenty of fruit and vegetables.", "Exercise regularly, at least for 30 minutes every day.", ""]
         }
-        case "Blood Glucose":{
-          return ["Follow the following guideline to maintain/reduce your blood glucose level to normal","Eat plenty of vegetables", "Have sufficient fibre in your diet", "Cut down on sugar", "Cut down on processed meat", "Eat fish regularly"] //https://www.diabetes.co.uk/diet/nhs-diet-advice.html
+        case "Blood Glucose": {
+          return ["Follow the following guideline to maintain/reduce your blood glucose level to normal", "Eat plenty of vegetables", "Have sufficient fibre in your diet", "Cut down on sugar", "Cut down on processed meat", "Eat fish regularly"] //taken from the https://www.diabetes.co.uk/diet/nhs-diet-advice.html site
         }
-        default:{
+        default: {
           return []
         }
       }
     }
-  }
-
-  analyseWeight(factor) {
-
   }
 }
